@@ -1,0 +1,49 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.egg-info/
+build/
+dist/
+
+# Virtualenvs
+/venv/
+.venv/
+
+# Env files
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+
+# Test / cache
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+htmlcov/
+.coverage
+coverage.xml
+
+# Logs / runtime
+logs/
+tmp/
+temp/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Gabru runtime state (user-installed skills, session DB, etc.)
+.gabru/
+gabru-*/
+
+# CLI config (may contain sensitive values)
+cli-config.yaml
+
+# Skills Hub cache
+skills/.hub/

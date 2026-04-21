@@ -1,0 +1,26 @@
+Gabru-Agent
+===========
+
+Gabru-Agent — Generative Agent for Build, Review & Unit-test.
+
+This project is a substantially modified derivative of Hermes Agent,
+an open-source AI agent framework developed by Nous Research.
+
+Upstream project
+----------------
+  Name:       Hermes Agent
+  Homepage:   https://github.com/NousResearch/hermes-agent
+  Copyright:  Copyright (c) 2025 Nous Research
+  License:    MIT License (see LICENSE)
+
+The MIT license terms of the upstream project are preserved in the LICENSE
+file at the root of this repository. Per those terms, the Hermes Agent
+copyright notice and permission notice are retained.
+
+Gabru-Agent has been significantly restructured for the Smart AI 2.0
+Autonomous Dev track. Large portions of the upstream codebase —
+including messaging-platform gateways, multi-provider adapters,
+RL-training infrastructure, the TypeScript TUI, and most bundled skills —
+have been removed. Remaining modules have been renamed, re-scoped, and
+refactored to serve a specialized multi-agent (Coder / Tester / Vuln-Hunter)
+software-engineering pipeline.

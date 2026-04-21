@@ -225,14 +225,36 @@ def get_external_skills_dirs() -> List[Path]:
 
 
 def get_all_skills_dirs() -> List[Path]:
-    """Return all skill directories: local ``~/.gabru/skills/`` first, then external.
+    """Return all skill directories.
 
-    The local dir is always first (and always included even if it doesn't exist
-    yet — callers handle that).  External dirs follow in config order.
+    Order: user ``~/.gabru/skills/`` first, then the bundled repo-local
+    ``skills/`` directory (ships with the package), then any external
+    dirs from config. Duplicates are filtered so the same physical path
+    isn't scanned twice.
     """
     dirs = [get_skills_dir()]
+
+    # Bundled skills that ship with the repo. In an editable install this
+    # is ``<repo>/skills/``; in a wheel install it's relative to the
+    # installed package. Both resolve via the module file location.
+    try:
+        repo_skills = (Path(__file__).resolve().parent.parent / "skills").resolve()
+        if repo_skills.is_dir():
+            dirs.append(repo_skills)
+    except Exception:
+        pass
+
     dirs.extend(get_external_skills_dirs())
-    return dirs
+
+    # Dedupe while preserving order
+    seen: set[str] = set()
+    unique: List[Path] = []
+    for d in dirs:
+        key = str(d.resolve()) if d.exists() else str(d)
+        if key not in seen:
+            seen.add(key)
+            unique.append(d)
+    return unique
 
 
 # ── Condition extraction ──────────────────────────────────────────────────

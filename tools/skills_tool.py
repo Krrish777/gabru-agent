@@ -556,7 +556,7 @@ def _find_all_skills(*, skip_disabled: bool = False) -> List[Dict[str, Any]]:
     Returns:
         List of skill metadata dicts (name, description, category).
     """
-    from agent.skill_utils import get_external_skills_dirs
+    from agent.skill_utils import get_all_skills_dirs
 
     skills = []
     seen_names: set = set()
@@ -564,11 +564,10 @@ def _find_all_skills(*, skip_disabled: bool = False) -> List[Dict[str, Any]]:
     # Load disabled set once (not per-skill)
     disabled = set() if skip_disabled else _get_disabled_skill_names()
 
-    # Scan local dir first, then external dirs (local takes precedence)
-    dirs_to_scan = []
-    if SKILLS_DIR.exists():
-        dirs_to_scan.append(SKILLS_DIR)
-    dirs_to_scan.extend(get_external_skills_dirs())
+    # Scan all known skills directories. ``get_all_skills_dirs`` resolves to
+    # ``~/.gabru/skills`` first (so user-installed packs win), then the
+    # repo-bundled ``skills/`` dir, then config-supplied externals.
+    dirs_to_scan = [d for d in get_all_skills_dirs() if d.exists()]
 
     for scan_dir in dirs_to_scan:
         for skill_md in scan_dir.rglob("SKILL.md"):

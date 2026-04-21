@@ -31,7 +31,6 @@ import tempfile
 from pathlib import Path
 from typing import Any, Dict, List, Tuple
 
-
 # Use the MCP SDK's stdio client — same transport Claude Code uses.
 try:
     from mcp.client.session import ClientSession

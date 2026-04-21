@@ -63,13 +63,30 @@ from tools.interrupt import is_interrupted, _interrupt_event  # noqa: F401 — r
 # =============================================================================
 
 # Singularity helpers (scratch dir, SIF cache) now live in tools/environments/singularity.py
-from tools.environments.singularity import _get_scratch_dir
-from tools.tool_backend_helpers import (
-    coerce_modal_mode,
-    has_direct_modal_credentials,
-    managed_nous_tools_enabled,
-    resolve_modal_backend_state,
-)
+try:
+    from tools.environments.singularity import _get_scratch_dir
+except ImportError:
+    def _get_scratch_dir() -> Path:
+        return Path(tempfile.gettempdir())
+try:
+    from tools.tool_backend_helpers import (
+        coerce_modal_mode,
+        has_direct_modal_credentials,
+        managed_nous_tools_enabled,
+        resolve_modal_backend_state,
+    )
+except ImportError:
+    def coerce_modal_mode(*args, **kwargs):
+        return None
+
+    def has_direct_modal_credentials(*args, **kwargs) -> bool:
+        return False
+
+    def managed_nous_tools_enabled(*args, **kwargs) -> bool:
+        return False
+
+    def resolve_modal_backend_state(*args, **kwargs):
+        return None
 
 
 # Hard cap on foreground timeout; override via TERMINAL_MAX_FOREGROUND_TIMEOUT env var.
@@ -688,12 +705,54 @@ def _transform_sudo_command(command: str | None) -> tuple[str | None, str | None
 
 # Environment classes now live in tools/environments/
 from tools.environments.local import LocalEnvironment as _LocalEnvironment
-from tools.environments.singularity import SingularityEnvironment as _SingularityEnvironment
-from tools.environments.ssh import SSHEnvironment as _SSHEnvironment
-from tools.environments.docker import DockerEnvironment as _DockerEnvironment
-from tools.environments.modal import ModalEnvironment as _ModalEnvironment
-from tools.environments.managed_modal import ManagedModalEnvironment as _ManagedModalEnvironment
-from tools.managed_tool_gateway import is_managed_tool_gateway_ready
+
+
+class _RemovedEnvironment:
+    """Placeholder for environments removed from Gabru-Agent."""
+
+    _label = "environment"
+
+    def __init__(self, *args, **kwargs):
+        raise NotImplementedError(
+            f"{self._label} was removed from Gabru-Agent"
+        )
+
+
+try:
+    from tools.environments.singularity import SingularityEnvironment as _SingularityEnvironment  # type: ignore
+except ImportError:
+    class _SingularityEnvironment(_RemovedEnvironment):  # type: ignore[no-redef]
+        _label = "SingularityEnvironment"
+
+try:
+    from tools.environments.ssh import SSHEnvironment as _SSHEnvironment  # type: ignore
+except ImportError:
+    class _SSHEnvironment(_RemovedEnvironment):  # type: ignore[no-redef]
+        _label = "SSHEnvironment"
+
+try:
+    from tools.environments.docker import DockerEnvironment as _DockerEnvironment  # type: ignore
+except ImportError:
+    class _DockerEnvironment(_RemovedEnvironment):  # type: ignore[no-redef]
+        _label = "DockerEnvironment"
+
+try:
+    from tools.environments.modal import ModalEnvironment as _ModalEnvironment  # type: ignore
+except ImportError:
+    class _ModalEnvironment(_RemovedEnvironment):  # type: ignore[no-redef]
+        _label = "ModalEnvironment"
+
+try:
+    from tools.environments.managed_modal import ManagedModalEnvironment as _ManagedModalEnvironment  # type: ignore
+except ImportError:
+    class _ManagedModalEnvironment(_RemovedEnvironment):  # type: ignore[no-redef]
+        _label = "ManagedModalEnvironment"
+
+try:
+    from tools.managed_tool_gateway import is_managed_tool_gateway_ready
+except ImportError:
+    def is_managed_tool_gateway_ready(*args, **kwargs) -> bool:
+        return False
 
 
 # Tool description for LLM

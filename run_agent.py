@@ -39,7 +39,10 @@ from types import SimpleNamespace
 import uuid
 from typing import List, Dict, Any, Optional
 from openai import OpenAI
-import fire
+try:
+    import fire
+except ImportError:
+    fire = None  # type: ignore[assignment]
 from datetime import datetime
 from pathlib import Path
 
@@ -73,7 +76,11 @@ from model_tools import (
 from tools.terminal_tool import cleanup_vm, get_active_env, is_persistent_env
 from tools.tool_result_storage import maybe_persist_tool_result, enforce_turn_budget
 from tools.interrupt import set_interrupt as _set_interrupt
-from tools.browser_tool import cleanup_browser
+try:
+    from tools.browser_tool import cleanup_browser
+except ImportError:
+    def cleanup_browser() -> None:
+        return None
 
 
 from gabru_constants import OPENROUTER_BASE_URL
@@ -100,20 +107,57 @@ from agent.subdirectory_hints import SubdirectoryHintTracker
 from agent.prompt_caching import apply_anthropic_cache_control
 from agent.prompt_builder import build_skills_system_prompt, build_context_files_prompt, build_environment_hints, load_soul_md, TOOL_USE_ENFORCEMENT_GUIDANCE, TOOL_USE_ENFORCEMENT_MODELS, DEVELOPER_ROLE_MODELS, GOOGLE_MODEL_OPERATIONAL_GUIDANCE, OPENAI_MODEL_EXECUTION_GUIDANCE
 from agent.usage_pricing import estimate_usage_cost, normalize_usage
-from agent.codex_responses_adapter import (
-    _chat_content_to_responses_parts,
-    _chat_messages_to_responses_input as _codex_chat_messages_to_responses_input,
-    _derive_responses_function_call_id as _codex_derive_responses_function_call_id,
-    _deterministic_call_id as _codex_deterministic_call_id,
-    _extract_responses_message_text as _codex_extract_responses_message_text,
-    _extract_responses_reasoning_text as _codex_extract_responses_reasoning_text,
-    _normalize_codex_response as _codex_normalize_codex_response,
-    _preflight_codex_api_kwargs as _codex_preflight_codex_api_kwargs,
-    _preflight_codex_input_items as _codex_preflight_codex_input_items,
-    _responses_tools as _codex_responses_tools,
-    _split_responses_tool_id as _codex_split_responses_tool_id,
-    _summarize_user_message_for_log,
-)
+try:
+    from agent.codex_responses_adapter import (
+        _chat_content_to_responses_parts,
+        _chat_messages_to_responses_input as _codex_chat_messages_to_responses_input,
+        _derive_responses_function_call_id as _codex_derive_responses_function_call_id,
+        _deterministic_call_id as _codex_deterministic_call_id,
+        _extract_responses_message_text as _codex_extract_responses_message_text,
+        _extract_responses_reasoning_text as _codex_extract_responses_reasoning_text,
+        _normalize_codex_response as _codex_normalize_codex_response,
+        _preflight_codex_api_kwargs as _codex_preflight_codex_api_kwargs,
+        _preflight_codex_input_items as _codex_preflight_codex_input_items,
+        _responses_tools as _codex_responses_tools,
+        _split_responses_tool_id as _codex_split_responses_tool_id,
+        _summarize_user_message_for_log,
+    )
+except ImportError:
+    def _chat_content_to_responses_parts(*args, **kwargs):
+        return []
+
+    def _codex_chat_messages_to_responses_input(*args, **kwargs):
+        return []
+
+    def _codex_derive_responses_function_call_id(*args, **kwargs):
+        return None
+
+    def _codex_deterministic_call_id(*args, **kwargs):
+        return ""
+
+    def _codex_extract_responses_message_text(*args, **kwargs):
+        return ""
+
+    def _codex_extract_responses_reasoning_text(*args, **kwargs):
+        return ""
+
+    def _codex_normalize_codex_response(response, *args, **kwargs):
+        return response
+
+    def _codex_preflight_codex_api_kwargs(kwargs, *args, **kw):
+        return kwargs
+
+    def _codex_preflight_codex_input_items(items, *args, **kwargs):
+        return items
+
+    def _codex_responses_tools(*args, **kwargs):
+        return []
+
+    def _codex_split_responses_tool_id(*args, **kwargs):
+        return (None, None)
+
+    def _summarize_user_message_for_log(*args, **kwargs):
+        return ""
 from agent.display import (
     KawaiiSpinner, build_tool_preview as _build_tool_preview,
     get_cute_tool_message as _get_cute_tool_message_impl,

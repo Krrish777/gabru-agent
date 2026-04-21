@@ -10,7 +10,14 @@ import queue
 import time as _time
 import getpass
 
-from gabru_cli.banner import cprint, _DIM, _RST
+try:
+    from gabru_cli.banner import cprint, _DIM, _RST
+except ImportError:
+    _DIM = ""
+    _RST = ""
+
+    def cprint(*args, **kwargs) -> None:
+        return None
 from gabru_cli.config import save_env_value_secure
 from gabru_constants import display_gabru_home
 

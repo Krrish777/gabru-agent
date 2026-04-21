@@ -69,6 +69,42 @@ def _load_tool_registry():
     return registry
 
 
+_MEMORY_STORE = None
+_TODO_STORE = None
+
+
+def _get_memory_store():
+    """Lazy-construct the per-process MemoryStore singleton."""
+    global _MEMORY_STORE
+    if _MEMORY_STORE is None:
+        try:
+            from tools.memory_tool import MemoryStore
+            _MEMORY_STORE = MemoryStore()
+            _MEMORY_STORE.load_from_disk()
+        except Exception as exc:
+            logger.warning("MemoryStore init failed: %s", exc)
+    return _MEMORY_STORE
+
+
+def _get_todo_store():
+    """Lazy-construct the per-process TodoStore singleton."""
+    global _TODO_STORE
+    if _TODO_STORE is None:
+        try:
+            from tools.todo_tool import TodoStore
+            _TODO_STORE = TodoStore()
+        except Exception as exc:
+            logger.warning("TodoStore init failed: %s", exc)
+    return _TODO_STORE
+
+
+# Map each tool that expects a `store` kwarg to its backing store factory.
+_STORE_INJECTORS = {
+    "memory": _get_memory_store,
+    "todo": _get_todo_store,
+}
+
+
 def _tool_schema_to_mcp(name: str, schema: Dict[str, Any]) -> Any:
     """Convert an OpenAI-style tool schema to an mcp.types.Tool.
 
@@ -92,11 +128,20 @@ async def _dispatch_tool(registry: Any, name: str, arguments: Dict[str, Any]) ->
     """Run a registry tool and return its JSON-string result.
 
     The registry handlers are synchronous, so we offload them to a thread
-    to keep the asyncio event loop responsive.
+    to keep the asyncio event loop responsive. Per-tool kwargs (e.g. the
+    memory/todo ``store``) are injected from module-level singletons —
+    the Hermes runtime does the same injection inside its agent loop.
     """
+    kwargs: Dict[str, Any] = {}
+    injector = _STORE_INJECTORS.get(name)
+    if injector is not None:
+        store = injector()
+        if store is not None:
+            kwargs["store"] = store
+
     def _call() -> str:
         try:
-            result = registry.dispatch(name, arguments or {})
+            result = registry.dispatch(name, arguments or {}, **kwargs)
         except Exception as exc:  # registry errors bubble up as strings
             logger.exception("tool %s raised", name)
             return json.dumps({"error": f"{type(exc).__name__}: {exc}"})

@@ -10,7 +10,6 @@ from unittest.mock import patch
 
 import pytest
 
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -524,6 +523,7 @@ class TestValidation:
     def test_validate_with_config(self):
         """Zip with config.yaml passes validation."""
         import io
+
         from gabru_cli.backup import _validate_backup_zip
 
         buf = io.BytesIO()
@@ -537,6 +537,7 @@ class TestValidation:
     def test_validate_with_env(self):
         """Zip with .env passes validation."""
         import io
+
         from gabru_cli.backup import _validate_backup_zip
 
         buf = io.BytesIO()
@@ -550,6 +551,7 @@ class TestValidation:
     def test_validate_rejects_random(self):
         """Zip without gabru markers fails validation."""
         import io
+
         from gabru_cli.backup import _validate_backup_zip
 
         buf = io.BytesIO()
@@ -563,6 +565,7 @@ class TestValidation:
     def test_detect_prefix_gabru(self):
         """Detects .gabru/ prefix wrapping all entries."""
         import io
+
         from gabru_cli.backup import _detect_prefix
 
         buf = io.BytesIO()
@@ -576,6 +579,7 @@ class TestValidation:
     def test_detect_prefix_none(self):
         """No prefix when entries are at root."""
         import io
+
         from gabru_cli.backup import _detect_prefix
 
         buf = io.BytesIO()
@@ -589,6 +593,7 @@ class TestValidation:
     def test_detect_prefix_only_dirs(self):
         """Prefix detection returns empty for zip with only directory entries."""
         import io
+
         from gabru_cli.backup import _detect_prefix
 
         buf = io.BytesIO()
@@ -949,7 +954,6 @@ class TestProfileRestoration:
         args = Namespace(zipfile=str(zip_path), force=True)
 
         # Simulate profiles module not being available
-        import gabru_cli.backup as backup_mod
         original_import = __builtins__.__import__ if hasattr(__builtins__, '__import__') else __import__
 
         def fake_import(name, *a, **kw):
@@ -1128,14 +1132,14 @@ class TestQuickSnapshot:
         assert restore_quick_snapshot("nonexistent", gabru_home=gabru_home) is False
 
     def test_auto_prune(self, gabru_home):
-        from gabru_cli.backup import create_quick_snapshot, list_quick_snapshots, _QUICK_DEFAULT_KEEP
+        from gabru_cli.backup import _QUICK_DEFAULT_KEEP, create_quick_snapshot, list_quick_snapshots
         for i in range(_QUICK_DEFAULT_KEEP + 5):
             create_quick_snapshot(label=f"snap-{i:03d}", gabru_home=gabru_home)
         snaps = list_quick_snapshots(limit=100, gabru_home=gabru_home)
         assert len(snaps) <= _QUICK_DEFAULT_KEEP
 
     def test_manual_prune(self, gabru_home):
-        from gabru_cli.backup import create_quick_snapshot, prune_quick_snapshots, list_quick_snapshots
+        from gabru_cli.backup import create_quick_snapshot, list_quick_snapshots, prune_quick_snapshots
         for i in range(10):
             create_quick_snapshot(label=f"s{i}", gabru_home=gabru_home)
         deleted = prune_quick_snapshots(keep=3, gabru_home=gabru_home)

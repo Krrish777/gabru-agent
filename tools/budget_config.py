@@ -8,7 +8,6 @@ fuller implementation (if needed) is reintroduced later.
 
 from dataclasses import dataclass
 
-
 DEFAULT_PREVIEW_SIZE_CHARS = 4096
 _DEFAULT_THRESHOLD = 32_000
 _DEFAULT_TURN_BUDGET = 256_000

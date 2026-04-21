@@ -1,11 +1,9 @@
 """Tests for browser_tool.py hardening: caching, security, thread safety, truncation."""
 
 import inspect
-import os
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -70,8 +68,9 @@ class TestFindAgentBrowserCache:
 
     def test_not_found_cached_raises_on_subsequent(self):
         """After FileNotFoundError, subsequent calls should raise from cache."""
-        import tools.browser_tool as bt
         from pathlib import Path
+
+        import tools.browser_tool as bt
 
         original_exists = Path.exists
 
@@ -137,9 +136,10 @@ class TestUrlDecodedSecretCheck:
 
     def test_encoded_key_blocked_in_navigate(self):
         """browser_navigate should block URLs with percent-encoded API keys."""
-        import urllib.parse
-        from tools.browser_tool import browser_navigate
         import json
+        import urllib.parse
+
+        from tools.browser_tool import browser_navigate
 
         # URL-encode a fake secret prefix that matches _PREFIX_RE
         encoded = urllib.parse.quote("sk-ant-fake123")

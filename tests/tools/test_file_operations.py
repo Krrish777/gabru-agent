@@ -1,26 +1,22 @@
 """Tests for tools/file_operations.py — deny list, result dataclasses, helpers."""
 
 import os
-import pytest
 from pathlib import Path
 from unittest.mock import MagicMock
 
-from tools.file_operations import (
-    _is_write_denied,
-    WRITE_DENIED_PATHS,
-    WRITE_DENIED_PREFIXES,
-    ReadResult,
-    WriteResult,
-    PatchResult,
-    SearchResult,
-    SearchMatch,
-    LintResult,
-    ShellFileOperations,
-    BINARY_EXTENSIONS,
-    IMAGE_EXTENSIONS,
-    MAX_LINE_LENGTH,
-)
+import pytest
 
+from tools.file_operations import (
+    MAX_LINE_LENGTH,
+    LintResult,
+    PatchResult,
+    ReadResult,
+    SearchMatch,
+    SearchResult,
+    ShellFileOperations,
+    WriteResult,
+    _is_write_denied,
+)
 
 # =========================================================================
 # Write deny list

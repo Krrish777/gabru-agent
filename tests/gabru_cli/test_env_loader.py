@@ -1,7 +1,6 @@
 import importlib
 import os
 import sys
-from pathlib import Path
 
 from gabru_cli.env_loader import load_gabru_dotenv
 

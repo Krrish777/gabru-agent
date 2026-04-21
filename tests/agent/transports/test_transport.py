@@ -1,13 +1,12 @@
 """Tests for the transport ABC, registry, and AnthropicTransport."""
 
-import pytest
 from types import SimpleNamespace
-from unittest.mock import MagicMock
 
+import pytest
+
+from agent.transports import _REGISTRY, get_transport, register_transport
 from agent.transports.base import ProviderTransport
-from agent.transports.types import NormalizedResponse, ToolCall, Usage
-from agent.transports import get_transport, register_transport, _REGISTRY
-
+from agent.transports.types import NormalizedResponse
 
 # ── ABC contract tests ──────────────────────────────────────────────────
 

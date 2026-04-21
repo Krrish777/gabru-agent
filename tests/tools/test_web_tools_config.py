@@ -13,8 +13,9 @@ import json
 import os
 import sys
 import types
+from unittest.mock import AsyncMock, MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock, AsyncMock
 
 
 class TestFirecrawlClientConfig:
@@ -427,8 +428,9 @@ class TestParallelClientConfig:
     def test_creates_client_with_key(self):
         """PARALLEL_API_KEY set → creates Parallel client."""
         with patch.dict(os.environ, {"PARALLEL_API_KEY": "test-key"}):
-            from tools.web_tools import _get_parallel_client
             from parallel import Parallel
+
+            from tools.web_tools import _get_parallel_client
             client = _get_parallel_client()
             assert client is not None
             assert isinstance(client, Parallel)

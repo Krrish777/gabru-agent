@@ -18,12 +18,11 @@ Run:
     pytest tests/test_agent_loop_tool_calling.py -v -k "single"  # run one test
 """
 
-import asyncio
 import json
 import os
 import sys
 from pathlib import Path
-from typing import Any, Dict, List, Set
+from typing import Any, Dict
 from unittest.mock import patch
 
 import pytest
@@ -36,8 +35,8 @@ if str(_repo_root) not in sys.path:
     sys.path.insert(0, str(_repo_root))
 
 try:
-    from environments.agent_loop import AgentResult, GabruAgentLoop
     from atroposlib.envs.server_handling.openai_server import OpenAIServer  # noqa: F401
+    from environments.agent_loop import AgentResult, GabruAgentLoop
 except ImportError:
     pytest.skip("atroposlib not installed", allow_module_level=True)
 

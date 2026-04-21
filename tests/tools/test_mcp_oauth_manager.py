@@ -74,8 +74,9 @@ def test_manager_remove_evicts_cache(tmp_path, monkeypatch):
 
 def test_gabru_provider_subclass_exists():
     """GabruMCPOAuthProvider is defined and subclasses OAuthClientProvider."""
-    from tools.mcp_oauth_manager import _GABRU_PROVIDER_CLS
     from mcp.client.auth.oauth2 import OAuthClientProvider
+
+    from tools.mcp_oauth_manager import _GABRU_PROVIDER_CLS
 
     assert _GABRU_PROVIDER_CLS is not None
     assert issubclass(_GABRU_PROVIDER_CLS, OAuthClientProvider)
@@ -127,7 +128,9 @@ async def test_disk_watch_invalidates_on_mtime_change(tmp_path, monkeypatch):
 def test_manager_builds_gabru_provider_subclass(tmp_path, monkeypatch):
     """get_or_build_provider returns GabruMCPOAuthProvider, not plain OAuthClientProvider."""
     from tools.mcp_oauth_manager import (
-        MCPOAuthManager, _GABRU_PROVIDER_CLS, reset_manager_for_tests,
+        _GABRU_PROVIDER_CLS,
+        MCPOAuthManager,
+        reset_manager_for_tests,
     )
     reset_manager_for_tests()
     monkeypatch.setenv("GABRU_HOME", str(tmp_path))

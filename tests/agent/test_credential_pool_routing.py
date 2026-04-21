@@ -11,7 +11,6 @@ Covers:
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
-
 # ---------------------------------------------------------------------------
 # 1. CLI _resolve_turn_agent_config includes credential_pool
 # ---------------------------------------------------------------------------

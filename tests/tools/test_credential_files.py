@@ -1,6 +1,5 @@
 """Tests for credential file passthrough and skills directory mounting."""
 
-import json
 import os
 from pathlib import Path
 from unittest.mock import patch
@@ -9,8 +8,8 @@ import pytest
 
 from tools.credential_files import (
     clear_credential_files,
-    get_credential_file_mounts,
     get_cache_directory_mounts,
+    get_credential_file_mounts,
     get_skills_directory_mount,
     iter_cache_files,
     iter_skills_files,

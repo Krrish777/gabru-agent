@@ -4,12 +4,10 @@ and handles responses properly for all supported providers.
 Ensures changes to one provider path don't silently break another.
 """
 
-import json
-import os
 import sys
 import types
 from types import SimpleNamespace
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
 import pytest
 
@@ -18,7 +16,6 @@ sys.modules.setdefault("firecrawl", types.SimpleNamespace(Firecrawl=object))
 sys.modules.setdefault("fal_client", types.SimpleNamespace())
 
 from run_agent import AIAgent
-
 
 # ── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -61,7 +58,6 @@ def _make_agent(monkeypatch, provider, api_mode="chat_completions", base_url="ht
     if model:
         kwargs["model"] = model
     base_url="https://openrouter.ai/api/v1",
-    api_key="test-key",
     base_url="https://openrouter.ai/api/v1",
     return AIAgent(**kwargs)
 
@@ -704,7 +700,7 @@ class TestAuxiliaryClientProviderPriority:
         monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
         from agent.auxiliary_client import get_text_auxiliary_client
         with patch("agent.auxiliary_client._read_nous_auth", return_value={"access_token": "nous-tok"}), \
-             patch("agent.auxiliary_client.OpenAI") as mock:
+             patch("agent.auxiliary_client.OpenAI"):
             client, model = get_text_auxiliary_client()
         assert model == "google/gemini-3-flash-preview"
 
@@ -729,7 +725,7 @@ class TestAuxiliaryClientProviderPriority:
         monkeypatch.delenv("OPENROUTER_API_KEY", raising=False)
         monkeypatch.delenv("OPENAI_BASE_URL", raising=False)
         monkeypatch.delenv("OPENAI_API_KEY", raising=False)
-        from agent.auxiliary_client import get_text_auxiliary_client, CodexAuxiliaryClient
+        from agent.auxiliary_client import CodexAuxiliaryClient, get_text_auxiliary_client
         with patch("agent.auxiliary_client._read_nous_auth", return_value=None), \
              patch("agent.auxiliary_client._read_codex_access_token", return_value="codex-tok"), \
              patch("agent.auxiliary_client.OpenAI"):

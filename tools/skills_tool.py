@@ -68,14 +68,13 @@ Usage:
 
 import json
 import logging
-
-from gabru_constants import get_gabru_home, display_gabru_home
 import os
 import re
 from enum import Enum
 from pathlib import Path
-from typing import Dict, Any, List, Optional, Set, Tuple
+from typing import Any, Dict, List, Optional, Set, Tuple
 
+from gabru_constants import display_gabru_home, get_gabru_home
 from tools.registry import registry, tool_error
 
 logger = logging.getLogger(__name__)
@@ -838,8 +837,9 @@ def skill_view(name: str, file_path: str = None, task_id: str = None) -> str:
         # Names containing ':' are routed to the plugin skill registry.
         # Bare names fall through to the existing flat-tree scan below.
         if ":" in name:
-            from agent.skill_utils import is_valid_namespace, parse_qualified_name
             from gabru_cli.plugins import discover_plugins, get_plugin_manager
+
+            from agent.skill_utils import is_valid_namespace, parse_qualified_name
 
             namespace, bare = parse_qualified_name(name)
             if not is_valid_namespace(namespace):
@@ -1029,7 +1029,7 @@ def skill_view(name: str, file_path: str = None, task_id: str = None) -> str:
 
         # If a specific file path is requested, read that instead
         if file_path and skill_dir:
-            from tools.path_security import validate_within_dir, has_traversal_component
+            from tools.path_security import has_traversal_component, validate_within_dir
 
             # Security: Prevent path traversal attacks
             if has_traversal_component(file_path):

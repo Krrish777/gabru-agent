@@ -14,10 +14,9 @@ import asyncio
 import json
 import threading
 from types import SimpleNamespace
-from unittest.mock import AsyncMock, MagicMock, patch
+from unittest.mock import AsyncMock, patch
 
 import pytest
-
 
 # ---------------------------------------------------------------------------
 # Helpers
@@ -91,6 +90,7 @@ class TestRunAsyncWorkerThread:
         """A worker thread's loop must stay open after _run_async returns,
         so cached httpx/AsyncOpenAI clients don't crash on GC."""
         from concurrent.futures import ThreadPoolExecutor
+
         from model_tools import _run_async
 
         def _run_on_worker():
@@ -110,6 +110,7 @@ class TestRunAsyncWorkerThread:
         """Multiple _run_async calls on the same worker thread should
         reuse the same persistent loop (not create-and-destroy each time)."""
         from concurrent.futures import ThreadPoolExecutor
+
         from model_tools import _run_async
 
         def _run_twice_on_worker():
@@ -129,8 +130,8 @@ class TestRunAsyncWorkerThread:
     def test_parallel_workers_get_separate_loops(self):
         """Different worker threads must get their own loops to avoid
         contention (the original reason for the worker-thread branch)."""
-        import time
         from concurrent.futures import ThreadPoolExecutor, as_completed
+
         from model_tools import _run_async
 
         barrier = threading.Barrier(3, timeout=5)
@@ -163,7 +164,8 @@ class TestRunAsyncWorkerThread:
         """Worker thread loops must be different from the main thread's
         persistent loop to avoid cross-thread contention."""
         from concurrent.futures import ThreadPoolExecutor
-        from model_tools import _run_async, _get_tool_loop
+
+        from model_tools import _get_tool_loop, _run_async
 
         main_loop = _get_tool_loop()
 
@@ -217,7 +219,7 @@ class TestVisionDispatchLoopSafety:
     def test_vision_dispatch_keeps_loop_alive(self, tmp_path):
         """After dispatching vision_analyze via the registry, the event
         loop must remain open so cached async clients don't crash on GC."""
-        from model_tools import _run_async, _get_tool_loop
+        from model_tools import _get_tool_loop
         from tools.registry import registry
 
         fake_response = _mock_vision_response()

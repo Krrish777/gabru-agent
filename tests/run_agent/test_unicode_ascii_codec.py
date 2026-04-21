@@ -7,11 +7,11 @@ that can't encode non-ASCII characters in API request payloads.
 import pytest
 
 from run_agent import (
-    _strip_non_ascii,
     _sanitize_messages_non_ascii,
+    _sanitize_messages_surrogates,
     _sanitize_structure_non_ascii,
     _sanitize_tools_non_ascii,
-    _sanitize_messages_surrogates,
+    _strip_non_ascii,
 )
 
 
@@ -244,6 +244,7 @@ class TestApiKeyClientSync:
     def test_client_api_key_updated_on_sanitize(self):
         """Simulate the recovery path and verify client.api_key is synced."""
         from unittest.mock import MagicMock
+
         from run_agent import AIAgent
 
         agent = AIAgent.__new__(AIAgent)

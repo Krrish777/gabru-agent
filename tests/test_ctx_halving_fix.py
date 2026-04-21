@@ -20,13 +20,12 @@ These are different and the old code conflated them; the fix keeps them
 separate.
 """
 
-import sys
 import os
-from unittest.mock import MagicMock, patch, PropertyMock
+import sys
+from unittest.mock import MagicMock
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
 
-import pytest
 
 
 # ---------------------------------------------------------------------------
@@ -228,8 +227,8 @@ class TestContextNotHalvedOnOutputCapError:
     """
 
     def _make_agent_with_compressor(self, context_length=200_000):
-        from run_agent import AIAgent
         from agent.context_compressor import ContextCompressor
+        from run_agent import AIAgent
 
         agent = object.__new__(AIAgent)
         agent.api_mode = "anthropic_messages"
@@ -261,7 +260,6 @@ class TestContextNotHalvedOnOutputCapError:
         """On 'max_tokens too large' error, _ephemeral_max_output_tokens is set
         and compressor.context_length is left unchanged."""
         from agent.model_metadata import parse_available_output_tokens_from_error
-        from agent.model_metadata import get_next_probe_tier
 
         error_msg = (
             "max_tokens: 128000 > context_window: 200000 "
@@ -284,8 +282,7 @@ class TestContextNotHalvedOnOutputCapError:
 
     def test_prompt_too_long_still_triggers_probe_tier(self):
         """Genuine prompt-too-long errors must still use get_next_probe_tier."""
-        from agent.model_metadata import parse_available_output_tokens_from_error
-        from agent.model_metadata import get_next_probe_tier
+        from agent.model_metadata import get_next_probe_tier, parse_available_output_tokens_from_error
 
         error_msg = "prompt is too long: 205000 tokens > 200000 maximum"
 

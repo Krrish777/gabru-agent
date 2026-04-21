@@ -5,9 +5,9 @@ persistent lines to scrollback on tool.completed, restoring the stacked
 tool history that was lost when the TUI switched to a single-line spinner.
 """
 
+import importlib
 import os
 import sys
-import importlib
 from unittest.mock import MagicMock, patch
 
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))

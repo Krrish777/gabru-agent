@@ -39,15 +39,16 @@ import re
 import shutil
 import tempfile
 from pathlib import Path
-from gabru_constants import get_gabru_home, display_gabru_home
-from typing import Dict, Any, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
+
+from gabru_constants import display_gabru_home, get_gabru_home
 
 logger = logging.getLogger(__name__)
 
 # Import security scanner — agent-created skills get the same scrutiny as
 # community hub installs.
 try:
-    from tools.skills_guard import scan_skill, should_allow_install, format_scan_report
+    from tools.skills_guard import format_scan_report, scan_skill, should_allow_install
     _GUARD_AVAILABLE = True
 except ImportError:
     _GUARD_AVAILABLE = False
@@ -74,7 +75,6 @@ def _security_scan_skill(skill_dir: Path) -> Optional[str]:
     return None
 
 import yaml
-
 
 # All skills live in ~/.gabru/skills/ (single source of truth)
 GABRU_HOME = get_gabru_home()
@@ -268,11 +268,11 @@ def _resolve_skill_target(skill_dir: Path, file_path: str) -> Tuple[Optional[Pat
 def _atomic_write_text(file_path: Path, content: str, encoding: str = "utf-8") -> None:
     """
     Atomically write text content to a file.
-    
+
     Uses a temporary file in the same directory and os.replace() to ensure
     the target file is never left in a partially-written state if the process
     crashes or is interrupted.
-    
+
     Args:
         file_path: Target file path
         content: Content to write

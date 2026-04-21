@@ -4,16 +4,16 @@ from prompt_toolkit.completion import CompleteEvent
 from prompt_toolkit.document import Document
 
 from gabru_cli.commands import (
+    _CMD_NAME_LIMIT,
+    _TG_NAME_LIMIT,
     COMMAND_REGISTRY,
     COMMANDS,
     COMMANDS_BY_CATEGORY,
-    CommandDef,
     GATEWAY_KNOWN_COMMANDS,
     SUBCOMMANDS,
+    CommandDef,
     SlashCommandAutoSuggest,
     SlashCommandCompleter,
-    _CMD_NAME_LIMIT,
-    _TG_NAME_LIMIT,
     _clamp_command_names,
     _clamp_telegram_names,
     _sanitize_telegram_name,
@@ -691,6 +691,7 @@ class TestTelegramMenuCommands:
     def test_includes_plugin_commands_via_lazy_discovery(self, tmp_path, monkeypatch):
         """Telegram menu generation should discover plugin slash commands on first access."""
         from unittest.mock import patch
+
         import gabru_cli.plugins as plugins_mod
 
         plugin_dir = tmp_path / "plugins" / "cmd-plugin"
@@ -716,7 +717,7 @@ class TestTelegramMenuCommands:
 
     def test_excludes_telegram_disabled_skills(self, tmp_path, monkeypatch):
         """Skills disabled for telegram should not appear in the menu."""
-        from unittest.mock import patch, MagicMock
+        from unittest.mock import patch
 
         # Set up a config with a telegram-specific disabled list
         config_file = tmp_path / "config.yaml"
@@ -757,8 +758,8 @@ class TestTelegramMenuCommands:
 
     def test_special_chars_in_skill_names_sanitized(self, tmp_path, monkeypatch):
         """Skills with +, /, or other special chars produce valid Telegram names."""
-        from unittest.mock import patch
         import re
+        from unittest.mock import patch
 
         monkeypatch.setenv("GABRU_HOME", str(tmp_path))
 

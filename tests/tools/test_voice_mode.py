@@ -9,7 +9,6 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-
 # ============================================================================
 # Fixtures
 # ============================================================================
@@ -307,7 +306,7 @@ class TestCreateAudioRecorder:
         monkeypatch.setattr("tools.voice_mode._termux_microphone_command", lambda: "/data/data/com.termux/files/usr/bin/termux-microphone-record")
         monkeypatch.setattr("tools.voice_mode._termux_api_app_installed", lambda: True)
 
-        from tools.voice_mode import create_audio_recorder, TermuxAudioRecorder
+        from tools.voice_mode import TermuxAudioRecorder, create_audio_recorder
         recorder = create_audio_recorder()
 
         assert isinstance(recorder, TermuxAudioRecorder)
@@ -319,7 +318,7 @@ class TestCreateAudioRecorder:
         monkeypatch.setattr("tools.voice_mode._termux_microphone_command", lambda: "/data/data/com.termux/files/usr/bin/termux-microphone-record")
         monkeypatch.setattr("tools.voice_mode._termux_api_app_installed", lambda: False)
 
-        from tools.voice_mode import create_audio_recorder, AudioRecorder
+        from tools.voice_mode import AudioRecorder, create_audio_recorder
         recorder = create_audio_recorder()
 
         assert isinstance(recorder, AudioRecorder)
@@ -428,7 +427,7 @@ class TestAudioRecorderStop:
         mock_stream = MagicMock()
         mock_sd.InputStream.return_value = mock_stream
 
-        from tools.voice_mode import AudioRecorder, SAMPLE_RATE
+        from tools.voice_mode import SAMPLE_RATE, AudioRecorder
 
         recorder = AudioRecorder()
         recorder.start()
@@ -475,7 +474,7 @@ class TestAudioRecorderStop:
         mock_stream = MagicMock()
         mock_sd.InputStream.return_value = mock_stream
 
-        from tools.voice_mode import AudioRecorder, SAMPLE_RATE
+        from tools.voice_mode import SAMPLE_RATE, AudioRecorder
 
         recorder = AudioRecorder()
         recorder.start()
@@ -727,7 +726,7 @@ class TestPlayBeep:
         assert len(audio_arg) > 0
 
     def test_beep_double_produces_longer_audio(self, mock_sd):
-        np = pytest.importorskip("numpy")
+        pytest.importorskip("numpy")
 
         from tools.voice_mode import play_beep
 
@@ -769,7 +768,7 @@ class TestSilenceDetection:
         mock_stream = MagicMock()
         mock_sd.InputStream.return_value = mock_stream
 
-        from tools.voice_mode import AudioRecorder, SAMPLE_RATE
+        from tools.voice_mode import AudioRecorder
 
         recorder = AudioRecorder()
         # Use very short durations for testing
@@ -912,8 +911,8 @@ class TestPlaybackInterrupt:
     """Verify that TTS playback can be interrupted."""
 
     def test_stop_playback_terminates_process(self):
-        from tools.voice_mode import stop_playback, _playback_lock
         import tools.voice_mode as vm
+        from tools.voice_mode import _playback_lock, stop_playback
 
         mock_proc = MagicMock()
         mock_proc.poll.return_value = None  # process is running
@@ -1015,7 +1014,7 @@ class TestContinuousModeFlow:
         recorder = AudioRecorder()
         results = []
 
-        for i in range(3):
+        for _i in range(3):
             recorder.start()
             callback = mock_sd.InputStream.call_args.kwargs.get("callback")
             if callback is None:
@@ -1105,8 +1104,9 @@ class TestConfigurableSilenceParams:
         mock_stream = MagicMock()
         mock_sd.InputStream.return_value = mock_stream
 
-        from tools.voice_mode import AudioRecorder
         import threading
+
+        from tools.voice_mode import AudioRecorder
 
         recorder = AudioRecorder()
         recorder._silence_threshold = 5000
@@ -1147,9 +1147,8 @@ class TestSubprocessTimeoutKill:
     """Bug: proc.wait(timeout) raised TimeoutExpired but process was not killed."""
 
     def test_timeout_kills_process(self):
-        import subprocess, os
+        import subprocess
         proc = subprocess.Popen(["sleep", "600"], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-        pid = proc.pid
         assert proc.poll() is None
 
         try:
@@ -1184,6 +1183,7 @@ class TestSilenceCallbackLock:
 
     def test_fire_block_acquires_lock(self):
         import inspect
+
         from tools.voice_mode import AudioRecorder
 
         source = inspect.getsource(AudioRecorder._ensure_stream)
@@ -1199,7 +1199,8 @@ class TestSilenceCallbackLock:
         recorder = AudioRecorder()
         mock_sd.InputStream.return_value = MagicMock()
 
-        cb = lambda: None
+        def cb():
+            return None
         recorder.start(on_silence_stop=cb)
         assert recorder._on_silence_stop is cb
 

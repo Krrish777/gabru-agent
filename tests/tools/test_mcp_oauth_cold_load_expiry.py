@@ -39,7 +39,6 @@ import time
 
 import pytest
 
-
 pytest.importorskip("mcp.client.auth.oauth2", reason="MCP SDK 1.26.0+ required")
 
 
@@ -502,8 +501,8 @@ async def test_initialize_skips_prefetch_when_no_tokens(tmp_path, monkeypatch):
     from mcp.shared.auth import OAuthClientMetadata
     from pydantic import AnyUrl
 
-    from tools.mcp_oauth_manager import _GABRU_PROVIDER_CLS, reset_manager_for_tests
     from tools.mcp_oauth import GabruTokenStorage
+    from tools.mcp_oauth_manager import _GABRU_PROVIDER_CLS, reset_manager_for_tests
 
     assert _GABRU_PROVIDER_CLS is not None
     reset_manager_for_tests()

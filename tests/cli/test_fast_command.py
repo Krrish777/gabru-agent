@@ -309,7 +309,7 @@ class TestAnthropicFastModeAdapter(unittest.TestCase):
     """Verify build_anthropic_kwargs handles fast_mode parameter."""
 
     def test_fast_mode_adds_speed_and_beta(self):
-        from agent.anthropic_adapter import build_anthropic_kwargs, _FAST_MODE_BETA
+        from agent.anthropic_adapter import _FAST_MODE_BETA, build_anthropic_kwargs
 
         kwargs = build_anthropic_kwargs(
             model="claude-opus-4-6",

@@ -8,11 +8,10 @@ Combines functionality from:
 - PR #790 (0xbyt4): reasoning display toggle and rendering
 """
 
+import re
 import unittest
 from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
-import re
-
 
 # ---------------------------------------------------------------------------
 # Effort level parsing

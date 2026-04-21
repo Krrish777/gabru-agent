@@ -2,28 +2,23 @@
 
 import json
 from contextlib import contextmanager
-from pathlib import Path
 from unittest.mock import patch
 
 import pytest
 
 from tools.skill_manager_tool import (
-    _validate_name,
-    _validate_category,
-    _validate_frontmatter,
-    _validate_file_path,
-    _find_skill,
-    _resolve_skill_dir,
+    MAX_NAME_LENGTH,
     _create_skill,
+    _delete_skill,
     _edit_skill,
     _patch_skill,
-    _delete_skill,
-    _write_file,
     _remove_file,
+    _validate_category,
+    _validate_file_path,
+    _validate_frontmatter,
+    _validate_name,
+    _write_file,
     skill_manage,
-    VALID_NAME_RE,
-    ALLOWED_SUBDIRS,
-    MAX_NAME_LENGTH,
 )
 
 

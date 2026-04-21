@@ -3,13 +3,11 @@
 import json
 from typing import List, Optional
 
-import pytest
-
 from tools.clarify_tool import (
-    clarify_tool,
-    check_clarify_requirements,
-    MAX_CHOICES,
     CLARIFY_SCHEMA,
+    MAX_CHOICES,
+    check_clarify_requirements,
+    clarify_tool,
 )
 
 

@@ -1,16 +1,14 @@
 """Tests for agent.error_classifier — structured API error classification."""
 
-import pytest
 from agent.error_classifier import (
     ClassifiedError,
     FailoverReason,
-    classify_api_error,
-    _extract_status_code,
+    _classify_402,
     _extract_error_body,
     _extract_error_code,
-    _classify_402,
+    _extract_status_code,
+    classify_api_error,
 )
-
 
 # ── Helper: mock API errors ────────────────────────────────────────────
 

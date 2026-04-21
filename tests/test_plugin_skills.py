@@ -8,12 +8,8 @@ Covers:
 
 import json
 import logging
-import os
-from pathlib import Path
-from unittest.mock import MagicMock
 
 import pytest
-
 
 # ── Namespace helpers ─────────────────────────────────────────────────────
 
@@ -73,8 +69,9 @@ class TestIsValidNamespace:
 class TestPluginSkillRegistry:
     @pytest.fixture
     def pm(self, monkeypatch):
-        from gabru_cli import plugins as plugins_mod
         from gabru_cli.plugins import PluginManager
+
+        from gabru_cli import plugins as plugins_mod
 
         fresh = PluginManager()
         monkeypatch.setattr(plugins_mod, "_plugin_manager", fresh)
@@ -122,8 +119,9 @@ class TestPluginSkillRegistry:
 class TestPluginContextRegisterSkill:
     @pytest.fixture
     def ctx(self, tmp_path, monkeypatch):
-        from gabru_cli import plugins as plugins_mod
         from gabru_cli.plugins import PluginContext, PluginManager, PluginManifest
+
+        from gabru_cli import plugins as plugins_mod
 
         pm = PluginManager()
         monkeypatch.setattr(plugins_mod, "_plugin_manager", pm)
@@ -167,8 +165,9 @@ class TestSkillViewQualifiedName:
     @pytest.fixture(autouse=True)
     def _isolate(self, tmp_path, monkeypatch):
         """Fresh plugin manager + empty SKILLS_DIR for each test."""
-        from gabru_cli import plugins as plugins_mod
         from gabru_cli.plugins import PluginManager
+
+        from gabru_cli import plugins as plugins_mod
 
         self.pm = PluginManager()
         monkeypatch.setattr(plugins_mod, "_plugin_manager", self.pm)
@@ -258,8 +257,9 @@ class TestSkillViewPluginGuards:
     def _isolate(self, tmp_path, monkeypatch):
         import sys
 
-        from gabru_cli import plugins as plugins_mod
         from gabru_cli.plugins import PluginManager
+
+        from gabru_cli import plugins as plugins_mod
 
         self.pm = PluginManager()
         monkeypatch.setattr(plugins_mod, "_plugin_manager", self.pm)
@@ -315,8 +315,9 @@ class TestSkillViewPluginGuards:
 class TestBundleContextBanner:
     @pytest.fixture(autouse=True)
     def _isolate(self, tmp_path, monkeypatch):
-        from gabru_cli import plugins as plugins_mod
         from gabru_cli.plugins import PluginManager
+
+        from gabru_cli import plugins as plugins_mod
 
         self.pm = PluginManager()
         monkeypatch.setattr(plugins_mod, "_plugin_manager", self.pm)

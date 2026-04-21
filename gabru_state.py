@@ -22,8 +22,9 @@ import sqlite3
 import threading
 import time
 from pathlib import Path
-from gabru_constants import get_gabru_home
 from typing import Any, Callable, Dict, List, Optional, TypeVar
+
+from gabru_constants import get_gabru_home
 
 logger = logging.getLogger(__name__)
 

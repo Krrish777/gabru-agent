@@ -8,10 +8,8 @@ Covers:
 - Profile-scoped reset (uses GABRU_HOME)
 """
 
-import os
+
 import pytest
-from argparse import Namespace
-from pathlib import Path
 
 
 @pytest.fixture
@@ -39,7 +37,7 @@ def _run_memory_reset(target="all", yes=False, monkeypatch=None, confirm_input="
 
     Simulates what happens when `gabru memory reset` is run.
     """
-    from gabru_constants import get_gabru_home, display_gabru_home
+    from gabru_constants import get_gabru_home
 
     mem_dir = get_gabru_home() / "memories"
     files_to_reset = []
@@ -56,7 +54,7 @@ def _run_memory_reset(target="all", yes=False, monkeypatch=None, confirm_input="
         if confirm_input != "yes":
             return "cancelled"
 
-    for f, desc in existing:
+    for f, _desc in existing:
         (mem_dir / f).unlink()
 
     return "deleted"

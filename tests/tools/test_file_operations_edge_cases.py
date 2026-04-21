@@ -5,11 +5,11 @@ Covers:
 - ``_check_lint()`` robustness against file paths containing curly braces
 """
 
-import pytest
 from unittest.mock import MagicMock, patch
 
-from tools.file_operations import ShellFileOperations
+import pytest
 
+from tools.file_operations import ShellFileOperations
 
 # =========================================================================
 # _is_likely_binary edge cases

@@ -25,8 +25,9 @@ import re
 import shutil
 import subprocess
 from pathlib import Path
-from gabru_constants import get_gabru_home
 from typing import Dict, List, Optional, Set
+
+from gabru_constants import get_gabru_home
 
 logger = logging.getLogger(__name__)
 

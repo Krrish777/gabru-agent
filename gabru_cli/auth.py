@@ -15,15 +15,15 @@ Architecture:
 
 from __future__ import annotations
 
+import base64
+import hashlib
 import json
 import logging
 import os
-import shutil
 import shlex
+import shutil
 import ssl
 import stat
-import base64
-import hashlib
 import subprocess
 import threading
 import time
@@ -38,7 +38,7 @@ from typing import Any, Dict, List, Optional
 import httpx
 import yaml
 
-from gabru_cli.config import get_gabru_home, get_config_path, read_raw_config
+from gabru_cli.config import get_config_path, get_gabru_home, read_raw_config
 from gabru_constants import OPENROUTER_BASE_URL
 
 logger = logging.getLogger(__name__)
@@ -1399,7 +1399,7 @@ def _is_remote_session() -> bool:
 
 def _read_codex_tokens(*, _lock: bool = True) -> Dict[str, Any]:
     """Read Codex OAuth tokens from Gabru auth store (~/.gabru/auth.json).
-    
+
     Returns dict with 'tokens' (access_token, refresh_token) and 'last_refresh'.
     Raises AuthError if no Codex tokens are stored.
     """
@@ -1560,7 +1560,7 @@ def _refresh_codex_auth_tokens(
     timeout_seconds: float,
 ) -> Dict[str, str]:
     """Refresh Codex access token using the refresh token.
-    
+
     Saves the new tokens to Gabru auth store automatically.
     """
     refreshed = refresh_codex_oauth_pure(
@@ -1578,7 +1578,7 @@ def _refresh_codex_auth_tokens(
 
 def _import_codex_cli_tokens() -> Optional[Dict[str, str]]:
     """Try to read tokens from ~/.codex/auth.json (Codex CLI shared file).
-    
+
     Returns tokens dict if valid and not expired, None otherwise.
     Does NOT write to the shared file.
     """
@@ -2474,7 +2474,7 @@ def get_nous_auth_status() -> Dict[str, Any]:
 
 def get_codex_auth_status() -> Dict[str, Any]:
     """Status snapshot for Codex auth.
-    
+
     Checks the credential pool first (where `gabru auth` stores credentials),
     then falls back to the legacy provider state.
     """
@@ -2958,7 +2958,7 @@ def _save_model_choice(model_id: str) -> None:
     The model is stored in config.yaml only — NOT in .env.  This avoids
     conflicts in multi-agent setups where env vars would stomp each other.
     """
-    from gabru_cli.config import save_config, load_config
+    from gabru_cli.config import load_config, save_config
 
     config = load_config()
     # Always use dict format so provider/base_url can be stored alongside
@@ -3375,8 +3375,11 @@ def _login_nous(args, pconfig: ProviderConfig) -> None:
                 )
 
             from gabru_cli.models import (
-                _PROVIDER_MODELS, get_pricing_for_provider, filter_nous_free_models,
-                check_nous_free_tier, partition_nous_models_by_tier,
+                _PROVIDER_MODELS,
+                check_nous_free_tier,
+                filter_nous_free_models,
+                get_pricing_for_provider,
+                partition_nous_models_by_tier,
             )
             model_ids = _PROVIDER_MODELS.get("nous", [])
 

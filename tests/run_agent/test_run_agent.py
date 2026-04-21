@@ -18,10 +18,9 @@ from unittest.mock import AsyncMock, MagicMock, patch
 import pytest
 
 import run_agent
-from run_agent import AIAgent
 from agent.error_classifier import FailoverReason
 from agent.prompt_builder import DEFAULT_AGENT_IDENTITY
-
+from run_agent import AIAgent
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -3296,8 +3295,9 @@ class TestSafeWriter:
 
     def test_write_delegates_normally(self):
         """When stdout is healthy, _SafeWriter is transparent."""
-        from run_agent import _SafeWriter
         from io import StringIO
+
+        from run_agent import _SafeWriter
         inner = StringIO()
         writer = _SafeWriter(inner)
         writer.write("hello")
@@ -3305,8 +3305,9 @@ class TestSafeWriter:
 
     def test_write_catches_oserror(self):
         """OSError on write is silently caught, returns len(data)."""
-        from run_agent import _SafeWriter
         from unittest.mock import MagicMock
+
+        from run_agent import _SafeWriter
         inner = MagicMock()
         inner.write.side_effect = OSError(5, "Input/output error")
         writer = _SafeWriter(inner)
@@ -3315,8 +3316,9 @@ class TestSafeWriter:
 
     def test_flush_catches_oserror(self):
         """OSError on flush is silently caught."""
-        from run_agent import _SafeWriter
         from unittest.mock import MagicMock
+
+        from run_agent import _SafeWriter
         inner = MagicMock()
         inner.flush.side_effect = OSError(5, "Input/output error")
         writer = _SafeWriter(inner)
@@ -3325,8 +3327,9 @@ class TestSafeWriter:
     def test_print_survives_broken_stdout(self, monkeypatch):
         """print() through _SafeWriter doesn't crash on broken pipe."""
         import sys
-        from run_agent import _SafeWriter
         from unittest.mock import MagicMock
+
+        from run_agent import _SafeWriter
         broken = MagicMock()
         broken.write.side_effect = OSError(5, "Input/output error")
         original = sys.stdout
@@ -3339,6 +3342,7 @@ class TestSafeWriter:
     def test_installed_in_run_conversation(self, agent):
         """run_conversation installs _SafeWriter on stdio."""
         import sys
+
         from run_agent import _SafeWriter
         resp = _mock_response(content="Done", finish_reason="stop")
         agent.client.chat.completions.create.return_value = resp
@@ -3362,9 +3366,9 @@ class TestSafeWriter:
 
     def test_double_wrap_prevented(self):
         """Wrapping an already-wrapped stream doesn't add layers."""
-        import sys
-        from run_agent import _SafeWriter
         from io import StringIO
+
+        from run_agent import _SafeWriter
         inner = StringIO()
         wrapped = _SafeWriter(inner)
         # isinstance check should prevent double-wrapping
@@ -3415,7 +3419,7 @@ class TestBuildApiKwargsAnthropicMaxTokens:
             if not kwargs:
                 kwargs = dict(zip(
                     ["model", "messages", "tools", "max_tokens", "reasoning_config"],
-                    mock_build.call_args[0],
+                    mock_build.call_args[0], strict=False,
                 ))
             assert kwargs.get("max_tokens") == 4096 or mock_build.call_args[1].get("max_tokens") == 4096
 
@@ -3457,7 +3461,7 @@ class TestAnthropicImageFallback:
 
         kwargs = mock_build.call_args.kwargs or dict(zip(
             ["model", "messages", "tools", "max_tokens", "reasoning_config"],
-            mock_build.call_args.args,
+            mock_build.call_args.args, strict=False,
         ))
         transformed = kwargs["messages"]
         assert isinstance(transformed[0]["content"], str)
@@ -3664,7 +3668,7 @@ class TestAnthropicBaseUrlPassthrough:
             patch("agent.anthropic_adapter.build_anthropic_client") as mock_build,
         ):
             mock_build.return_value = MagicMock()
-            a = AIAgent(
+            AIAgent(
                 api_key="sk-ant-api03-test1234567890",
                 base_url="https://llm-proxy.company.com/v1",
                 api_mode="anthropic_messages",
@@ -3683,7 +3687,7 @@ class TestAnthropicBaseUrlPassthrough:
             patch("agent.anthropic_adapter.build_anthropic_client") as mock_build,
         ):
             mock_build.return_value = MagicMock()
-            a = AIAgent(
+            AIAgent(
                 api_key="sk-ant...7890",
                 api_mode="anthropic_messages",
                 quiet_mode=True,
@@ -4029,7 +4033,7 @@ class TestInterruptVprintForceTrue:
                 if "force=True" not in stripped:
                     violations.append(f"line {i}: {stripped}")
         assert not violations, (
-            f"Interrupt _vprint calls missing force=True:\n"
+            "Interrupt _vprint calls missing force=True:\n"
             + "\n".join(violations)
         )
 
@@ -4086,7 +4090,8 @@ class TestStreamCallbackNonStreamingProvider:
         agent._interruptible_api_call = MagicMock(return_value=mock_response)
 
         received = []
-        cb = lambda delta: received.append(delta)
+        def cb(delta):
+            return received.append(delta)
         agent._stream_callback = cb
 
         _cb = getattr(agent, "_stream_callback", None)
@@ -4130,7 +4135,8 @@ class TestStreamCallbackNonStreamingProvider:
         )
 
         received = []
-        cb = lambda d: received.append(d)
+        def cb(d):
+            return received.append(d)
         agent._stream_callback = cb
         _cb = agent._stream_callback
 

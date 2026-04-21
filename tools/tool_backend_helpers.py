@@ -6,7 +6,6 @@ import os
 from pathlib import Path
 from typing import Any, Dict
 
-
 _DEFAULT_BROWSER_PROVIDER = "local"
 _DEFAULT_MODAL_MODE = "auto"
 _VALID_MODAL_MODES = {"auto", "direct", "managed"}

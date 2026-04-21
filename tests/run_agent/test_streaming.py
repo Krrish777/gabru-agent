@@ -3,14 +3,10 @@
 Tests the unified streaming API call, delta callbacks, tool-call
 suppression, provider fallback, and CLI streaming display.
 """
-import json
-import threading
-import uuid
 from types import SimpleNamespace
-from unittest.mock import MagicMock, patch, PropertyMock
+from unittest.mock import MagicMock, patch
 
 import pytest
-
 
 # ── Helpers ──────────────────────────────────────────────────────────────
 
@@ -562,8 +558,9 @@ class TestStreamingFallback:
     @patch("run_agent.AIAgent._close_request_openai_client")
     def test_exhausted_transient_stream_error_propagates(self, mock_close, mock_create):
         """Transient stream errors retry first, then propagate after retries exhausted."""
-        from run_agent import AIAgent
         import httpx
+
+        from run_agent import AIAgent
 
         mock_client = MagicMock()
         mock_client.chat.completions.create.side_effect = httpx.ConnectError("socket closed")
@@ -597,12 +594,13 @@ class TestStreamingFallback:
         this.  It should be retried at the streaming level, same as httpx connection
         errors, then propagate to the main retry loop after exhaustion.
         """
-        from run_agent import AIAgent
         import httpx
 
         # Create an APIError that mimics what the OpenAI SDK raises from SSE error events.
         # Key: no status_code attribute (unlike APIStatusError which has one).
         from openai import APIError as OAIAPIError
+
+        from run_agent import AIAgent
         sse_error = OAIAPIError(
             message="Network connection lost.",
             request=httpx.Request("POST", "https://openrouter.ai/api/v1/chat/completions"),
@@ -636,10 +634,10 @@ class TestStreamingFallback:
     @patch("run_agent.AIAgent._close_request_openai_client")
     def test_sse_non_connection_error_propagates_immediately(self, mock_close, mock_create):
         """SSE errors that aren't connection-related propagate immediately (no stream retry)."""
-        from run_agent import AIAgent
         import httpx
-
         from openai import APIError as OAIAPIError
+
+        from run_agent import AIAgent
         sse_error = OAIAPIError(
             message="Invalid model configuration.",
             request=httpx.Request("POST", "https://openrouter.ai/api/v1/chat/completions"),
@@ -808,7 +806,7 @@ class TestCodexStreamCallbacks:
         mock_client = MagicMock()
         mock_client.responses.stream.return_value = mock_stream
 
-        response = agent._run_codex_stream({}, client=mock_client)
+        agent._run_codex_stream({}, client=mock_client)
         assert "Hello from Codex!" in deltas
 
     def test_codex_stream_refreshes_activity_on_every_event(self):
@@ -863,8 +861,9 @@ class TestCodexStreamCallbacks:
         assert touch_calls.count("receiving stream response") == 3
 
     def test_codex_remote_protocol_error_falls_back_to_create_stream(self):
-        from run_agent import AIAgent
         import httpx
+
+        from run_agent import AIAgent
 
         fallback_response = SimpleNamespace(
             output=[SimpleNamespace(

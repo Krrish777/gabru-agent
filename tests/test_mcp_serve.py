@@ -12,13 +12,11 @@ import asyncio
 import json
 import os
 import sqlite3
-import time
 import threading
-from pathlib import Path
-from unittest.mock import MagicMock, patch
+import time
+from unittest.mock import MagicMock
 
 import pytest
-
 
 # ---------------------------------------------------------------------------
 # Fixtures
@@ -387,7 +385,7 @@ class TestEventBridge:
         assert result[0]["session_key"] == "wake"
 
     def test_queue_limit(self):
-        from mcp_serve import EventBridge, QueueEvent, QUEUE_LIMIT
+        from mcp_serve import QUEUE_LIMIT, EventBridge, QueueEvent
         b = EventBridge()
         for i in range(QUEUE_LIMIT + 50):
             b._enqueue(QueueEvent(cursor=0, type="message", session_key=f"s{i}"))
@@ -441,7 +439,7 @@ class TestEventBridge:
 @pytest.fixture
 def mcp_server_e2e(populated_sessions_dir, mock_session_db, monkeypatch):
     """Create a fully wired MCP server for E2E testing."""
-    mcp = pytest.importorskip("mcp", reason="MCP SDK not installed")
+    pytest.importorskip("mcp", reason="MCP SDK not installed")
     import mcp_serve
     monkeypatch.setattr(mcp_serve, "_get_sessions_dir", lambda: populated_sessions_dir)
     monkeypatch.setattr(mcp_serve, "_get_session_db", lambda: mock_session_db)

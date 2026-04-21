@@ -1,8 +1,8 @@
 """Tests for gabru_cli.copilot_auth — Copilot token validation and resolution."""
 
-import os
+from unittest.mock import patch
+
 import pytest
-from unittest.mock import patch, MagicMock
 
 
 class TestTokenValidation:

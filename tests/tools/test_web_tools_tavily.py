@@ -7,12 +7,12 @@ Coverage:
   web_search_tool / web_extract_tool / web_crawl_tool — Tavily dispatch paths.
 """
 
+import asyncio
 import json
 import os
-import asyncio
-import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
+import pytest
 
 # ─── _tavily_request ─────────────────────────────────────────────────────────
 
@@ -36,7 +36,7 @@ class TestTavilyRequest:
         with patch.dict(os.environ, {"TAVILY_API_KEY": "tvly-test-key"}):
             with patch("tools.web_tools.httpx.post", return_value=mock_response) as mock_post:
                 from tools.web_tools import _tavily_request
-                result = _tavily_request("search", {"query": "hello"})
+                _tavily_request("search", {"query": "hello"})
 
                 mock_post.assert_called_once()
                 call_kwargs = mock_post.call_args

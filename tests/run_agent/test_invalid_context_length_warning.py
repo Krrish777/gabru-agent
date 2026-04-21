@@ -1,6 +1,6 @@
 """Tests that invalid context_length values in config produce visible warnings."""
 
-from unittest.mock import patch, MagicMock, call
+from unittest.mock import patch
 
 
 def _build_agent(model_cfg, custom_providers=None, model="anthropic/claude-opus-4.6"):
@@ -80,7 +80,7 @@ def test_custom_providers_invalid_context_length_warns():
         }
     ]
     with patch("run_agent.logger") as mock_logger:
-        agent = _build_agent(
+        _build_agent(
             {"default": "gpt5.4", "provider": "custom",
              "base_url": "http://localhost:4000/v1"},
             custom_providers=custom_providers,
@@ -104,7 +104,7 @@ def test_custom_providers_valid_context_length():
         }
     ]
     with patch("run_agent.logger") as mock_logger:
-        agent = _build_agent(
+        _build_agent(
             {"default": "gpt5.4", "provider": "custom",
              "base_url": "http://localhost:4000/v1"},
             custom_providers=custom_providers,

@@ -1,8 +1,7 @@
 """Tests for tools/skills_hub.py — source adapters, lock file, taps, dedup logic."""
 
 import json
-from pathlib import Path
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 import httpx
 import pytest
@@ -10,23 +9,22 @@ import pytest
 from tools.skills_hub import (
     GitHubAuth,
     GitHubSource,
-    LobeHubSource,
-    SkillsShSource,
-    WellKnownSkillSource,
-    OptionalSkillSource,
-    SkillMeta,
-    SkillBundle,
     HubLockFile,
+    LobeHubSource,
+    OptionalSkillSource,
+    SkillBundle,
+    SkillMeta,
+    SkillsShSource,
     TapsManager,
+    WellKnownSkillSource,
+    _skill_meta_to_dict,
+    append_audit_log,
     bundle_content_hash,
     check_for_skill_updates,
     create_source_router,
-    unified_search,
-    append_audit_log,
-    _skill_meta_to_dict,
     quarantine_bundle,
+    unified_search,
 )
-
 
 # ---------------------------------------------------------------------------
 # GitHubSource._parse_frontmatter_quick

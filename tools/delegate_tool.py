@@ -18,16 +18,16 @@ never the child's intermediate tool calls or reasoning.
 
 import json
 import logging
+
 logger = logging.getLogger(__name__)
 import os
 import threading
 import time
-from concurrent.futures import ThreadPoolExecutor, as_completed
+from concurrent.futures import ThreadPoolExecutor
 from typing import Any, Dict, List, Optional
 
 from toolsets import TOOLSETS
 from utils import base_url_hostname
-
 
 # Tools that children must never have access to
 DELEGATE_BLOCKED_TOOLS = frozenset([
@@ -864,7 +864,8 @@ def delegate_task(
                         completed_count += 1
                     break
 
-                from concurrent.futures import wait as _cf_wait, FIRST_COMPLETED
+                from concurrent.futures import FIRST_COMPLETED
+                from concurrent.futures import wait as _cf_wait
                 done, pending = _cf_wait(pending, timeout=0.5, return_when=FIRST_COMPLETED)
                 for future in done:
                     try:

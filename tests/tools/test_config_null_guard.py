@@ -6,8 +6,6 @@ return ``None`` instead of the default — calling ``.lower()`` on that raises
 """
 
 from unittest.mock import patch
-import pytest
-
 
 # ── TTS tool ──────────────────────────────────────────────────────────────
 
@@ -16,14 +14,14 @@ class TestTTSProviderNullGuard:
 
     def test_explicit_null_provider_returns_default(self):
         """YAML ``tts: {provider: null}`` should fall back to default."""
-        from tools.tts_tool import _get_provider, DEFAULT_PROVIDER
+        from tools.tts_tool import DEFAULT_PROVIDER, _get_provider
 
         result = _get_provider({"provider": None})
         assert result == DEFAULT_PROVIDER.lower().strip()
 
     def test_missing_provider_returns_default(self):
         """No ``provider`` key at all should also return default."""
-        from tools.tts_tool import _get_provider, DEFAULT_PROVIDER
+        from tools.tts_tool import DEFAULT_PROVIDER, _get_provider
 
         result = _get_provider({})
         assert result == DEFAULT_PROVIDER.lower().strip()
@@ -102,6 +100,7 @@ class TestTrajectoryCompressorNullGuard:
     def test_config_loading_null_base_url_keeps_default(self):
         """YAML ``summarization: {base_url: null}`` should keep default."""
         from trajectory_compressor import CompressionConfig
+
         from gabru_constants import OPENROUTER_BASE_URL
 
         config = CompressionConfig()

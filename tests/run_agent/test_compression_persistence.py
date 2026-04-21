@@ -19,10 +19,7 @@ Bug scenario (pre-fix):
 import os
 import tempfile
 from pathlib import Path
-from unittest.mock import MagicMock, patch
-
-import pytest
-
+from unittest.mock import patch
 
 # ---------------------------------------------------------------------------
 # Part 1: Agent-side — _flush_messages_to_session_db after compression

@@ -1,9 +1,9 @@
-import os
 import json
+import os
+import sys
 from datetime import datetime, timedelta, timezone
 from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
-import sys
 from unittest.mock import patch
 
 MODULE_PATH = Path(__file__).resolve().parents[2] / "tools" / "managed_tool_gateway.py"

@@ -9,13 +9,11 @@ Verifies that:
 
 import json
 import os
-import sqlite3
 import tempfile
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 
 # ---------------------------------------------------------------------------
 # Test: _flush_messages_to_session_db only writes new messages
@@ -202,6 +200,7 @@ class TestAppendToTranscriptSkipDb:
         """With skip_db=True and a real DB, message does NOT appear in SQLite."""
         from gateway.config import GatewayConfig
         from gateway.session import SessionStore
+
         from gabru_state import SessionDB
 
         db_path = tmp_path / "test_skip.db"
@@ -233,6 +232,7 @@ class TestAppendToTranscriptSkipDb:
         """Without skip_db, message appears in both JSONL and SQLite."""
         from gateway.config import GatewayConfig
         from gateway.session import SessionStore
+
         from gabru_state import SessionDB
 
         db_path = tmp_path / "test_both.db"

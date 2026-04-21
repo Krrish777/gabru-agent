@@ -10,9 +10,6 @@ Covers:
 """
 
 import os
-import pytest
-from unittest.mock import patch, MagicMock
-
 
 # ---------------------------------------------------------------------------
 # OLLAMA_API_KEY credential resolution
@@ -104,8 +101,8 @@ class TestDirectAliases:
 
     def test_direct_alias_resolved_before_catalog(self, monkeypatch):
         """Direct aliases take priority over models.dev catalog lookup."""
-        from gabru_cli.model_switch import DirectAlias, resolve_alias
         import gabru_cli.model_switch as ms
+        from gabru_cli.model_switch import DirectAlias, resolve_alias
 
         test_aliases = {
             "glm": DirectAlias("glm-4.7", "custom", "https://ollama.com/v1"),
@@ -121,8 +118,8 @@ class TestDirectAliases:
 
     def test_reverse_lookup_by_model_id(self, monkeypatch):
         """Full model names (e.g. 'kimi-k2.5') match via reverse lookup."""
-        from gabru_cli.model_switch import DirectAlias, resolve_alias
         import gabru_cli.model_switch as ms
+        from gabru_cli.model_switch import DirectAlias, resolve_alias
 
         test_aliases = {
             "kimi": DirectAlias("kimi-k2.5", "custom", "https://ollama.com/v1"),
@@ -139,8 +136,8 @@ class TestDirectAliases:
 
     def test_reverse_lookup_case_insensitive(self, monkeypatch):
         """Reverse lookup is case-insensitive."""
-        from gabru_cli.model_switch import DirectAlias, resolve_alias
         import gabru_cli.model_switch as ms
+        from gabru_cli.model_switch import DirectAlias, resolve_alias
 
         test_aliases = {
             "glm": DirectAlias("GLM-4.7", "custom", "https://ollama.com/v1"),
@@ -189,9 +186,10 @@ class TestModelTabCompletion:
 
     def test_model_completions_yields_direct_aliases(self, monkeypatch):
         """_model_completions yields direct aliases with model and provider info."""
-        from gabru_cli.commands import SlashCommandCompleter
-        from gabru_cli.model_switch import DirectAlias
         import gabru_cli.model_switch as ms
+        from gabru_cli.model_switch import DirectAlias
+
+        from gabru_cli.commands import SlashCommandCompleter
 
         test_aliases = {
             "opus": DirectAlias("claude-opus-4-6", "anthropic", ""),
@@ -208,9 +206,10 @@ class TestModelTabCompletion:
 
     def test_model_completions_filters_by_prefix(self, monkeypatch):
         """Completions filter by typed prefix."""
-        from gabru_cli.commands import SlashCommandCompleter
-        from gabru_cli.model_switch import DirectAlias
         import gabru_cli.model_switch as ms
+        from gabru_cli.model_switch import DirectAlias
+
+        from gabru_cli.commands import SlashCommandCompleter
 
         test_aliases = {
             "opus": DirectAlias("claude-opus-4-6", "anthropic", ""),
@@ -227,9 +226,10 @@ class TestModelTabCompletion:
 
     def test_model_completions_shows_metadata(self, monkeypatch):
         """Completions include model name and provider in display_meta."""
-        from gabru_cli.commands import SlashCommandCompleter
-        from gabru_cli.model_switch import DirectAlias
         import gabru_cli.model_switch as ms
+        from gabru_cli.model_switch import DirectAlias
+
+        from gabru_cli.commands import SlashCommandCompleter
 
         test_aliases = {
             "glm": DirectAlias("glm-4.7", "custom", "https://ollama.com/v1"),
@@ -483,8 +483,8 @@ class TestResolveAliasEdgeCases:
 
     def test_whitespace_input_handled(self, monkeypatch):
         """Input with whitespace is stripped before lookup."""
-        from gabru_cli.model_switch import DirectAlias
         import gabru_cli.model_switch as ms
+        from gabru_cli.model_switch import DirectAlias
 
         test_aliases = {
             "myalias": DirectAlias("my-model", "custom", "https://example.com"),
@@ -505,8 +505,8 @@ class TestSwitchModelDirectAliasOverride:
 
     def test_switch_model_uses_alias_base_url(self, monkeypatch):
         """When resolved alias has base_url, switch_model should use it."""
-        from gabru_cli.model_switch import DirectAlias
         import gabru_cli.model_switch as ms
+        from gabru_cli.model_switch import DirectAlias
 
         test_aliases = {
             "qwen": DirectAlias("qwen3.5:397b", "custom", "https://ollama.com/v1"),
@@ -533,8 +533,8 @@ class TestSwitchModelDirectAliasOverride:
 
     def test_switch_model_alias_no_api_key_gets_default(self, monkeypatch):
         """When alias has base_url but no api_key, 'no-key-required' is set."""
-        from gabru_cli.model_switch import DirectAlias
         import gabru_cli.model_switch as ms
+        from gabru_cli.model_switch import DirectAlias
 
         test_aliases = {
             "local": DirectAlias("local-model", "custom", "http://localhost:11434/v1"),

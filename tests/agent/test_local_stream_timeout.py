@@ -7,8 +7,9 @@ kills during long prefill phases.
 """
 
 import os
-import pytest
 from unittest.mock import patch
+
+import pytest
 
 from agent.model_metadata import is_local_endpoint
 

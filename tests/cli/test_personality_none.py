@@ -1,8 +1,8 @@
 """Tests for /personality none — clearing personality overlay."""
-import pytest
-from unittest.mock import MagicMock, patch, mock_open
-import yaml
+from unittest.mock import MagicMock, patch
 
+import pytest
+import yaml
 
 # ── CLI tests ──────────────────────────────────────────────────────────────
 
@@ -114,7 +114,7 @@ class TestGatewayPersonalityNone:
 
         with patch("gateway.run._gabru_home", tmp_path):
             event = self._make_event("default")
-            result = await runner._handle_personality_command(event)
+            await runner._handle_personality_command(event)
 
         assert runner._ephemeral_system_prompt == ""
 

@@ -11,8 +11,6 @@ import re
 import threading
 from collections import OrderedDict
 from pathlib import Path
-
-from gabru_constants import get_gabru_home, get_skills_dir, is_wsl
 from typing import Optional
 
 from agent.skill_utils import (
@@ -24,6 +22,7 @@ from agent.skill_utils import (
     parse_frontmatter,
     skill_matches_platform,
 )
+from gabru_constants import get_gabru_home, get_skills_dir, is_wsl
 from utils import atomic_json_write
 
 logger = logging.getLogger(__name__)
@@ -818,6 +817,7 @@ def build_nous_subscription_prompt(valid_tool_names: "set[str] | None" = None) -
     """Build a compact Nous subscription capability block for the system prompt."""
     try:
         from gabru_cli.nous_subscription import get_nous_subscription_features
+
         from tools.tool_backend_helpers import managed_nous_tools_enabled
     except Exception as exc:
         logger.debug("Failed to import Nous subscription helper: %s", exc)

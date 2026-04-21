@@ -3,17 +3,16 @@
 from __future__ import annotations
 
 import logging
+import os
 import random
+import re
 import threading
 import time
 import uuid
-import os
-import re
 from dataclasses import dataclass, fields, replace
 from datetime import datetime
 from typing import Any, Dict, List, Optional, Set, Tuple
 
-from gabru_constants import OPENROUTER_BASE_URL
 import gabru_cli.auth as auth_mod
 from gabru_cli.auth import (
     CODEX_ACCESS_TOKEN_REFRESH_SKEW_SECONDS,
@@ -31,6 +30,7 @@ from gabru_cli.auth import (
     read_credential_pool,
     write_credential_pool,
 )
+from gabru_constants import OPENROUTER_BASE_URL
 
 logger = logging.getLogger(__name__)
 

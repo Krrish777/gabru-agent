@@ -1147,7 +1147,9 @@ class SlashCommandCompleter(Completer):
         # Config-based direct aliases (preferred — include provider info)
         try:
             from gabru_cli.model_switch import (
-                _ensure_direct_aliases, DIRECT_ALIASES, MODEL_ALIASES,
+                DIRECT_ALIASES,
+                MODEL_ALIASES,
+                _ensure_direct_aliases,
             )
             _ensure_direct_aliases()
             for name, da in DIRECT_ALIASES.items():

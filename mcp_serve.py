@@ -751,7 +751,7 @@ def create_mcp_server(event_bridge: Optional[EventBridge] = None) -> "FastMCP":
             entries = _load_sessions_index()
             targets = []
             seen = set()
-            for key, entry in entries.items():
+            for _key, entry in entries.items():
                 origin = entry.get("origin", {})
                 p = entry.get("platform") or origin.get("platform", "")
                 chat_id = origin.get("chat_id", "")

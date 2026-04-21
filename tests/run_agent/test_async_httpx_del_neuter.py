@@ -13,12 +13,9 @@ The three-layer defence:
 """
 
 import asyncio
-import threading
-from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
 import pytest
-
 
 # ---------------------------------------------------------------------------
 # Layer 1: neuter_async_httpx_del
@@ -235,7 +232,7 @@ class TestClientCacheBoundedGrowth:
                 with _client_cache_lock:
                     # Simulate what _get_cached_client does: replace on loop mismatch
                     if key in _client_cache:
-                        old_entry = _client_cache[key]
+                        _client_cache[key]
                         del _client_cache[key]
                     _client_cache[key] = (mock_client, f"model-{i}", loop)
 
@@ -253,9 +250,9 @@ class TestClientCacheBoundedGrowth:
     def test_max_cache_size_eviction(self):
         """Cache should not exceed _CLIENT_CACHE_MAX_SIZE."""
         from agent.auxiliary_client import (
+            _CLIENT_CACHE_MAX_SIZE,
             _client_cache,
             _client_cache_lock,
-            _CLIENT_CACHE_MAX_SIZE,
         )
 
         # Save existing cache state

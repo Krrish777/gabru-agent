@@ -1,4 +1,3 @@
-import json
 import sys
 import tempfile
 import threading
@@ -7,7 +6,6 @@ from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
 
 import pytest
-
 
 TOOLS_DIR = Path(__file__).resolve().parents[2] / "tools"
 

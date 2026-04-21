@@ -1,6 +1,5 @@
 from unittest.mock import Mock, patch
 
-
 HOST = "example-host"
 PORT = 9223
 WS_URL = f"ws://{HOST}:{PORT}/devtools/browser/abc123"

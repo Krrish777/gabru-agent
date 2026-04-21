@@ -3,14 +3,13 @@
 from tools.registry import ToolRegistry
 from toolsets import (
     TOOLSETS,
-    get_toolset,
-    resolve_toolset,
-    resolve_multiple_toolsets,
-    get_all_toolsets,
-    get_toolset_names,
-    validate_toolset,
     create_custom_toolset,
+    get_all_toolsets,
+    get_toolset,
     get_toolset_info,
+    resolve_multiple_toolsets,
+    resolve_toolset,
+    validate_toolset,
 )
 
 
@@ -209,7 +208,7 @@ class TestToolsetConsistency:
         # All platforms must contain the shared core; platform-specific
         # extras are OK (subset check, not equality).
         core = set.intersection(*tool_sets)
-        for name, ts in zip(platforms, tool_sets):
+        for name, ts in zip(platforms, tool_sets, strict=False):
             assert core.issubset(ts), f"{name} is missing core tools: {core - ts}"
         # Sanity: the shared core must be non-trivial (i.e. we didn't
         # silently let a platform diverge so far that nothing is shared).

@@ -31,9 +31,9 @@ def _force_local_terminal(monkeypatch):
 
 
 from tools.code_execution_tool import (
-    SANDBOX_ALLOWED_TOOLS,
     DEFAULT_EXECUTION_MODE,
     EXECUTION_MODES,
+    SANDBOX_ALLOWED_TOOLS,
     _get_execution_mode,
     _is_usable_python,
     _resolve_child_cwd,
@@ -131,7 +131,8 @@ class TestResolveChildPython(unittest.TestCase):
 
     def test_project_with_virtualenv_picks_venv_python(self):
         """Project mode + VIRTUAL_ENV pointing at a real venv → that python."""
-        import tempfile, pathlib
+        import pathlib
+        import tempfile
         with tempfile.TemporaryDirectory() as td:
             fake_venv = pathlib.Path(td)
             (fake_venv / "bin").mkdir()
@@ -154,7 +155,8 @@ class TestResolveChildPython(unittest.TestCase):
 
     def test_project_prefers_virtualenv_over_conda(self):
         """If both VIRTUAL_ENV and CONDA_PREFIX are set, VIRTUAL_ENV wins."""
-        import tempfile, pathlib
+        import pathlib
+        import tempfile
         with tempfile.TemporaryDirectory() as ve_td, tempfile.TemporaryDirectory() as conda_td:
             ve = pathlib.Path(ve_td)
             (ve / "bin").mkdir()

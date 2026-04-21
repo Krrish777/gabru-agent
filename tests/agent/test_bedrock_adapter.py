@@ -10,13 +10,7 @@ Covers:
 """
 
 import json
-import os
-import time
-from types import SimpleNamespace
-from unittest.mock import MagicMock, patch, PropertyMock
-
-import pytest
-
+from unittest.mock import MagicMock, patch
 
 # ---------------------------------------------------------------------------
 # AWS credential detection
@@ -850,8 +844,8 @@ class TestExtractProviderFromArn:
 class TestClientCache:
     def test_reset_clears_caches(self):
         from agent.bedrock_adapter import (
-            _bedrock_runtime_client_cache,
             _bedrock_control_client_cache,
+            _bedrock_runtime_client_cache,
             reset_client_cache,
         )
         _bedrock_runtime_client_cache["test"] = "dummy"
@@ -929,7 +923,7 @@ class TestStreamConverseWithCallbacks:
             {"messageStop": {"stopReason": "tool_use"}},
             {"metadata": {"usage": {"inputTokens": 0, "outputTokens": 0}}},
         ]}
-        result = stream_converse_with_callbacks(
+        stream_converse_with_callbacks(
             events, on_tool_start=lambda name: tools_started.append(name),
         )
         assert tools_started == ["read_file"]
@@ -951,7 +945,7 @@ class TestStreamConverseWithCallbacks:
             call_count["n"] += 1
             return call_count["n"] >= 3  # Interrupt after 2 events
 
-        result = stream_converse_with_callbacks(
+        stream_converse_with_callbacks(
             events,
             on_text_delta=lambda t: deltas.append(t),
             on_interrupt_check=check_interrupt,
@@ -972,7 +966,7 @@ class TestStreamConverseWithCallbacks:
             {"messageStop": {"stopReason": "end_turn"}},
             {"metadata": {"usage": {"inputTokens": 0, "outputTokens": 0}}},
         ]}
-        result = stream_converse_with_callbacks(
+        stream_converse_with_callbacks(
             events, on_reasoning_delta=lambda t: reasoning.append(t),
         )
         assert reasoning == ["Let me think..."]
@@ -1086,7 +1080,7 @@ class TestBedrockContextLength:
         assert get_bedrock_context_length("amazon.nova-micro-v1:0") == 128_000
 
     def test_unknown_model_gets_default(self):
-        from agent.bedrock_adapter import get_bedrock_context_length, BEDROCK_DEFAULT_CONTEXT_LENGTH
+        from agent.bedrock_adapter import BEDROCK_DEFAULT_CONTEXT_LENGTH, get_bedrock_context_length
         assert get_bedrock_context_length("unknown.model-v1:0") == BEDROCK_DEFAULT_CONTEXT_LENGTH
 
     def test_inference_profile_resolves(self):

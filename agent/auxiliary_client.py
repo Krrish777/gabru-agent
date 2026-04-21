@@ -16,7 +16,6 @@ from __future__ import annotations
 
 from typing import Any, Dict, Optional, Tuple
 
-
 OMIT_TEMPERATURE = object()
 _AI_GATEWAY_HEADERS: Dict[str, str] = {}
 _OR_HEADERS: Dict[str, str] = {}

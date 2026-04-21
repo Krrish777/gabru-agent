@@ -1,12 +1,12 @@
 """Tests for SSRF protection in url_safety module."""
 
+import ipaddress
 import socket
 from unittest.mock import patch
 
-from tools.url_safety import is_safe_url, _is_blocked_ip
-
-import ipaddress
 import pytest
+
+from tools.url_safety import _is_blocked_ip, is_safe_url
 
 
 class TestIsSafeUrl:

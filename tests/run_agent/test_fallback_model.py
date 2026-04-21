@@ -4,14 +4,12 @@ Verifies that AIAgent can switch to a configured fallback model/provider
 when the primary fails after retries.
 """
 
-import os
-from types import SimpleNamespace
 from unittest.mock import MagicMock, patch
 
 import pytest
 
-from run_agent import AIAgent
 import run_agent
+from run_agent import AIAgent
 
 
 @pytest.fixture(autouse=True)

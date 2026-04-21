@@ -1,10 +1,7 @@
 """Tests for ``gabru debug`` CLI command and debug utilities."""
 
-import os
-import sys
 import urllib.error
-from pathlib import Path
-from unittest.mock import MagicMock, patch, call
+from unittest.mock import MagicMock, patch
 
 import pytest
 
@@ -521,6 +518,7 @@ class TestScheduleAutoDelete:
         """
         import ast
         import inspect
+
         from gabru_cli.debug import _schedule_auto_delete
 
         # Strip the docstring before scanning so the regression-rationale
@@ -576,8 +574,9 @@ class TestScheduleAutoDelete:
 
     def test_records_pending_to_json(self, gabru_home):
         """Scheduled URLs are persisted to pending.json with expiration."""
-        from gabru_cli.debug import _schedule_auto_delete, _pending_file
         import json
+
+        from gabru_cli.debug import _pending_file, _schedule_auto_delete
 
         _schedule_auto_delete(
             ["https://paste.rs/abc", "https://paste.rs/def"],
@@ -600,7 +599,7 @@ class TestScheduleAutoDelete:
 
     def test_skips_non_paste_rs_urls(self, gabru_home):
         """dpaste.com URLs auto-expire — don't track them."""
-        from gabru_cli.debug import _schedule_auto_delete, _pending_file
+        from gabru_cli.debug import _pending_file, _schedule_auto_delete
 
         _schedule_auto_delete(["https://dpaste.com/something"])
 
@@ -609,7 +608,7 @@ class TestScheduleAutoDelete:
 
     def test_merges_with_existing_pending(self, gabru_home):
         """Subsequent calls merge into existing pending.json."""
-        from gabru_cli.debug import _schedule_auto_delete, _load_pending
+        from gabru_cli.debug import _load_pending, _schedule_auto_delete
 
         _schedule_auto_delete(["https://paste.rs/first"], delay_seconds=10)
         _schedule_auto_delete(["https://paste.rs/second"], delay_seconds=10)
@@ -620,7 +619,7 @@ class TestScheduleAutoDelete:
 
     def test_dedupes_same_url(self, gabru_home):
         """Same URL recorded twice → one entry with the later expire_at."""
-        from gabru_cli.debug import _schedule_auto_delete, _load_pending
+        from gabru_cli.debug import _load_pending, _schedule_auto_delete
 
         _schedule_auto_delete(["https://paste.rs/dup"], delay_seconds=10)
         _schedule_auto_delete(["https://paste.rs/dup"], delay_seconds=100)
@@ -641,12 +640,13 @@ class TestSweepExpiredPastes:
         assert remaining == 0
 
     def test_sweep_deletes_expired_entries(self, gabru_home):
-        from gabru_cli.debug import (
-            _sweep_expired_pastes,
-            _save_pending,
-            _load_pending,
-        )
         import time
+
+        from gabru_cli.debug import (
+            _load_pending,
+            _save_pending,
+            _sweep_expired_pastes,
+        )
 
         # Seed pending.json with one expired + one future entry
         _save_pending([
@@ -672,8 +672,9 @@ class TestSweepExpiredPastes:
         assert urls == {"https://paste.rs/future"}
 
     def test_sweep_leaves_future_entries_alone(self, gabru_home):
-        from gabru_cli.debug import _sweep_expired_pastes, _save_pending
         import time
+
+        from gabru_cli.debug import _save_pending, _sweep_expired_pastes
 
         _save_pending([
             {"url": "https://paste.rs/future1", "expire_at": time.time() + 3600},
@@ -689,12 +690,13 @@ class TestSweepExpiredPastes:
 
     def test_sweep_survives_network_failure(self, gabru_home):
         """Failed DELETEs stay in pending.json until the 24h grace window."""
-        from gabru_cli.debug import (
-            _sweep_expired_pastes,
-            _save_pending,
-            _load_pending,
-        )
         import time
+
+        from gabru_cli.debug import (
+            _load_pending,
+            _save_pending,
+            _sweep_expired_pastes,
+        )
 
         _save_pending([
             {"url": "https://paste.rs/flaky", "expire_at": time.time() - 100},
@@ -713,12 +715,13 @@ class TestSweepExpiredPastes:
 
     def test_sweep_drops_entries_past_grace_window(self, gabru_home):
         """After 24h past expiration, give up even on network failures."""
-        from gabru_cli.debug import (
-            _sweep_expired_pastes,
-            _save_pending,
-            _load_pending,
-        )
         import time
+
+        from gabru_cli.debug import (
+            _load_pending,
+            _save_pending,
+            _sweep_expired_pastes,
+        )
 
         # Expired 25 hours ago → past the 24h grace window
         very_old = time.time() - (25 * 3600)

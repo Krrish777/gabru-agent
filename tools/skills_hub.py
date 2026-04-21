@@ -25,15 +25,17 @@ from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path, PurePosixPath
-from gabru_constants import get_gabru_home
 from typing import Any, Dict, List, Optional, Tuple, Union
 from urllib.parse import urlparse, urlunparse
 
 import httpx
 import yaml
 
+from gabru_constants import get_gabru_home
 from tools.skills_guard import (
-    ScanResult, content_hash, TRUSTED_REPOS,
+    TRUSTED_REPOS,
+    ScanResult,
+    content_hash,
 )
 
 logger = logging.getLogger(__name__)

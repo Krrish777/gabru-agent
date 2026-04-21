@@ -5,7 +5,6 @@ from pathlib import Path
 
 import pytest
 
-
 TOOLS_DIR = Path(__file__).resolve().parents[2] / "tools"
 
 
@@ -177,7 +176,7 @@ def test_managed_fal_submit_uses_gateway_origin_and_nous_token(monkeypatch):
         "image_generation_tool.py",
     )
     monkeypatch.setattr(image_generation_tool.uuid, "uuid4", lambda: "fal-submit-123")
-    
+
     image_generation_tool._submit_fal_request(
         "fal-ai/flux-2-pro",
         {"prompt": "test prompt", "num_images": 1},

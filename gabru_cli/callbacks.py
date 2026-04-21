@@ -6,12 +6,12 @@ as its first argument and uses its state (queues, app reference) to coordinate
 with the TUI.
 """
 
+import getpass
 import queue
 import time as _time
-import getpass
 
 try:
-    from gabru_cli.banner import cprint, _DIM, _RST
+    from gabru_cli.banner import _DIM, _RST, cprint
 except ImportError:
     _DIM = ""
     _RST = ""

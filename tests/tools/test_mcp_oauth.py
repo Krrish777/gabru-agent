@@ -3,23 +3,21 @@
 import json
 import os
 from io import BytesIO
-from pathlib import Path
-from unittest.mock import patch, MagicMock, AsyncMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 
 from tools.mcp_oauth import (
     GabruTokenStorage,
     OAuthNonInteractiveError,
+    _can_open_browser,
+    _find_free_port,
+    _is_interactive,
+    _make_callback_handler,
+    _wait_for_callback,
     build_oauth_auth,
     remove_oauth_tokens,
-    _find_free_port,
-    _can_open_browser,
-    _is_interactive,
-    _wait_for_callback,
-    _make_callback_handler,
 )
-
 
 # ---------------------------------------------------------------------------
 # GabruTokenStorage
@@ -368,8 +366,9 @@ class TestWaitForCallbackNoBlocking:
 
     def test_raises_on_timeout_instead_of_input(self):
         """When no auth code arrives, raises OAuthNonInteractiveError."""
-        import tools.mcp_oauth as mod
         import asyncio
+
+        import tools.mcp_oauth as mod
 
         mod._oauth_port = _find_free_port()
 

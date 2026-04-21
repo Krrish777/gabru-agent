@@ -1,8 +1,6 @@
 """Tests for agent.models_dev — models.dev registry integration."""
-import json
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
-import pytest
 from agent.models_dev import (
     PROVIDER_TO_MODELS_DEV,
     _extract_context,
@@ -10,7 +8,6 @@ from agent.models_dev import (
     get_model_capabilities,
     lookup_models_dev_context,
 )
-
 
 SAMPLE_REGISTRY = {
     "anthropic": {
@@ -191,8 +188,9 @@ class TestFetchModelsDev:
 
     @patch("agent.models_dev.requests.get")
     def test_in_memory_cache_used(self, mock_get):
-        import agent.models_dev as md
         import time
+
+        import agent.models_dev as md
         md._models_dev_cache = SAMPLE_REGISTRY
         md._models_dev_cache_time = time.time()  # fresh
 

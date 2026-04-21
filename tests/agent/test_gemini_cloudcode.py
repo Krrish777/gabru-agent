@@ -18,11 +18,8 @@ import json
 import stat
 import time
 from pathlib import Path
-from types import SimpleNamespace
-from unittest.mock import MagicMock, patch
 
 import pytest
-
 
 # =============================================================================
 # Fixtures
@@ -115,7 +112,7 @@ class TestClientCredResolution:
 
     def test_shipped_default_used_when_no_env(self):
         """Out of the box, the public gemini-cli desktop client is used."""
-        from agent.google_oauth import _get_client_id, _DEFAULT_CLIENT_ID
+        from agent.google_oauth import _DEFAULT_CLIENT_ID, _get_client_id
 
         # Confirmed PUBLIC: baked into Google's open-source gemini-cli
         assert _DEFAULT_CLIENT_ID.endswith(".apps.googleusercontent.com")
@@ -234,9 +231,11 @@ class TestCredentialIo:
 
     def test_update_project_ids(self):
         from agent.google_oauth import (
-            load_credentials, save_credentials, update_project_ids,
+            GoogleCredentials,
+            load_credentials,
+            save_credentials,
+            update_project_ids,
         )
-        from agent.google_oauth import GoogleCredentials
 
         save_credentials(GoogleCredentials(
             access_token="at", refresh_token="rt",
@@ -1054,7 +1053,8 @@ class TestGeminiHttpErrorParsing:
         fire, so the main loop triggers fallback_providers.
         """
         from agent.gemini_cloudcode_adapter import _gemini_http_error
-        from agent.error_classifier import classify_api_error, FailoverReason
+
+        from agent.error_classifier import FailoverReason, classify_api_error
 
         body = {
             "error": {
@@ -1097,8 +1097,9 @@ class TestProviderRegistration:
         assert resolve_provider("google-gemini") == "gemini"
 
     def test_runtime_provider_raises_when_not_logged_in(self):
-        from gabru_cli.auth import AuthError
         from gabru_cli.runtime_provider import resolve_runtime_provider
+
+        from gabru_cli.auth import AuthError
 
         with pytest.raises(AuthError) as exc_info:
             resolve_runtime_provider(requested="google-gemini-cli")
@@ -1155,6 +1156,7 @@ class TestAuthStatus:
 
     def test_logged_in_reports_email_and_project(self):
         from agent.google_oauth import GoogleCredentials, save_credentials
+
         from gabru_cli.auth import get_auth_status
 
         save_credentials(GoogleCredentials(

@@ -11,7 +11,6 @@ Run with:  python -m pytest tests/test_delegate.py -v
 
 import json
 import os
-import sys
 import threading
 import time
 import unittest
@@ -20,15 +19,15 @@ from unittest.mock import MagicMock, patch
 from tools.delegate_tool import (
     DELEGATE_BLOCKED_TOOLS,
     DELEGATE_TASK_SCHEMA,
-    _get_max_concurrent_children,
     MAX_DEPTH,
-    check_delegate_requirements,
-    delegate_task,
     _build_child_agent,
     _build_child_system_prompt,
-    _strip_blocked_tools,
+    _get_max_concurrent_children,
     _resolve_child_credential_pool,
     _resolve_delegation_credentials,
+    _strip_blocked_tools,
+    check_delegate_requirements,
+    delegate_task,
 )
 
 
@@ -184,7 +183,7 @@ class TestDelegateTask(unittest.TestCase):
             "summary": "Done", "api_calls": 1, "duration_seconds": 1.0
         }
         parent = _make_mock_parent()
-        result = json.loads(delegate_task(
+        json.loads(delegate_task(
             goal="This should be ignored",
             tasks=[{"goal": "Actual task"}],
             parent_agent=parent,

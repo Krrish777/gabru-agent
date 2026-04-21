@@ -9,13 +9,14 @@ Covers:
   - Backward compatibility with naive timestamps
 """
 
-import os
 import logging
+import os
 import sys
-import pytest
 from datetime import datetime, timedelta, timezone
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 from zoneinfo import ZoneInfo
+
+import pytest
 
 import gabru_time
 
@@ -246,8 +247,8 @@ class TestCronTimezone:
         _reset_gabru_time_cache()
 
         # Create a job with a NAIVE past timestamp (simulating pre-tz data)
-        from cron.jobs import create_job, load_jobs, save_jobs, get_due_jobs
-        job = create_job(prompt="Test job", schedule="every 1h")
+        from cron.jobs import create_job, get_due_jobs, load_jobs, save_jobs
+        create_job(prompt="Test job", schedule="every 1h")
         jobs = load_jobs()
         # Force a naive (no timezone) past timestamp
         naive_past = (datetime.now() - timedelta(seconds=30)).isoformat()
@@ -320,9 +321,9 @@ class TestCronTimezone:
         os.environ["GABRU_TIMEZONE"] = "UTC"
         _reset_gabru_time_cache()
 
-        from cron.jobs import create_job, load_jobs, save_jobs, get_due_jobs
+        from cron.jobs import create_job, get_due_jobs, load_jobs, save_jobs
 
-        job = create_job(prompt="Bug repro", schedule="every 1h")
+        create_job(prompt="Bug repro", schedule="every 1h")
         jobs = load_jobs()
 
         # Simulate a naive timestamp that was written by datetime.now() on a
@@ -351,7 +352,7 @@ class TestCronTimezone:
         os.environ["GABRU_TIMEZONE"] = "Pacific/Midway"  # UTC-11
         _reset_gabru_time_cache()
 
-        from cron.jobs import create_job, load_jobs, save_jobs, get_due_jobs
+        from cron.jobs import create_job, get_due_jobs, load_jobs, save_jobs
         create_job(prompt="Cross-tz job", schedule="every 1h")
         jobs = load_jobs()
 

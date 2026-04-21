@@ -10,30 +10,25 @@ Coverage levels:
   Persistent cache       — save/load, corruption, update, provider isolation
 """
 
-import os
 import time
-import tempfile
+from unittest.mock import MagicMock, patch
 
-import pytest
 import yaml
-from pathlib import Path
-from unittest.mock import patch, MagicMock
 
 from agent.model_metadata import (
+    _MODEL_CACHE_TTL,
     CONTEXT_PROBE_TIERS,
     DEFAULT_CONTEXT_LENGTHS,
     _strip_provider_prefix,
-    estimate_tokens_rough,
     estimate_messages_tokens_rough,
+    estimate_tokens_rough,
+    fetch_model_metadata,
+    get_cached_context_length,
     get_model_context_length,
     get_next_probe_tier,
-    get_cached_context_length,
     parse_context_limit_from_error,
     save_context_length,
-    fetch_model_metadata,
-    _MODEL_CACHE_TTL,
 )
-
 
 # =========================================================================
 # Token estimation
@@ -161,8 +156,9 @@ class TestDefaultContextLengths:
     def test_grok_substring_matching(self):
         # Longest-first substring matching must resolve the real xAI model
         # IDs to the correct fallback entries without 128k probe-down.
-        from agent.model_metadata import get_model_context_length
         from unittest.mock import patch as mock_patch
+
+        from agent.model_metadata import get_model_context_length
 
         # Fake the provider/API/cache layers so the lookup falls through
         # to DEFAULT_CONTEXT_LENGTHS.

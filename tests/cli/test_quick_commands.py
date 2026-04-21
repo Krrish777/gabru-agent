@@ -1,9 +1,9 @@
 """Tests for user-defined quick commands that bypass the agent loop."""
 import subprocess
-from unittest.mock import MagicMock, patch, AsyncMock
-from rich.text import Text
-import pytest
+from unittest.mock import MagicMock, patch
 
+import pytest
+from rich.text import Text
 
 # ── CLI tests ──────────────────────────────────────────────────────────────
 
@@ -170,8 +170,9 @@ class TestGatewayQuickCommands:
 
     @pytest.mark.asyncio
     async def test_timeout_returns_error(self):
-        from gateway.run import GatewayRunner
         import asyncio
+
+        from gateway.run import GatewayRunner
         runner = GatewayRunner.__new__(GatewayRunner)
         runner.config = {"quick_commands": {"slow": {"type": "exec", "command": "sleep 100"}}}
         runner._running_agents = {}

@@ -776,6 +776,7 @@ def test_auth_remove_claude_code_suppresses_reseed(tmp_path, monkeypatch):
     (gabru_home / "auth.json").write_text(json.dumps(auth_store))
 
     from types import SimpleNamespace
+
     from gabru_cli.auth_commands import auth_remove_command
     auth_remove_command(SimpleNamespace(provider="anthropic", target="1"))
 
@@ -790,7 +791,7 @@ def test_unsuppress_credential_source_clears_marker(tmp_path, monkeypatch):
     monkeypatch.setenv("GABRU_HOME", str(tmp_path / "gabru"))
     _write_auth_store(tmp_path, {"version": 1})
 
-    from gabru_cli.auth import suppress_credential_source, unsuppress_credential_source, is_source_suppressed
+    from gabru_cli.auth import is_source_suppressed, suppress_credential_source, unsuppress_credential_source
 
     suppress_credential_source("openai-codex", "device_code")
     assert is_source_suppressed("openai-codex", "device_code") is True
@@ -821,9 +822,9 @@ def test_unsuppress_credential_source_preserves_other_markers(tmp_path, monkeypa
     _write_auth_store(tmp_path, {"version": 1})
 
     from gabru_cli.auth import (
+        is_source_suppressed,
         suppress_credential_source,
         unsuppress_credential_source,
-        is_source_suppressed,
     )
 
     suppress_credential_source("openai-codex", "device_code")
@@ -868,6 +869,7 @@ def test_auth_remove_codex_device_code_suppresses_reseed(tmp_path, monkeypatch):
     (gabru_home / "auth.json").write_text(json.dumps(auth_store))
 
     from types import SimpleNamespace
+
     from gabru_cli.auth_commands import auth_remove_command
 
     auth_remove_command(SimpleNamespace(provider="openai-codex", target="1"))
@@ -915,6 +917,7 @@ def test_auth_remove_codex_manual_source_suppresses_reseed(tmp_path, monkeypatch
     (gabru_home / "auth.json").write_text(json.dumps(auth_store))
 
     from types import SimpleNamespace
+
     from gabru_cli.auth_commands import auth_remove_command
 
     auth_remove_command(SimpleNamespace(provider="openai-codex", target="1"))
@@ -1046,6 +1049,7 @@ def test_auth_remove_env_seeded_suppresses_shell_exported_var(tmp_path, monkeypa
     )
 
     from types import SimpleNamespace
+
     from gabru_cli.auth_commands import auth_remove_command
     auth_remove_command(SimpleNamespace(provider="xai", target="1"))
 
@@ -1098,6 +1102,7 @@ def test_auth_remove_env_seeded_dotenv_only_no_shell_hint(tmp_path, monkeypatch,
     )
 
     from types import SimpleNamespace
+
     from gabru_cli.auth_commands import auth_remove_command
     auth_remove_command(SimpleNamespace(provider="deepseek", target="1"))
 
@@ -1127,8 +1132,10 @@ def test_auth_add_clears_env_suppression_for_provider(tmp_path, monkeypatch):
     )
 
     from types import SimpleNamespace
-    from gabru_cli.auth import is_source_suppressed
+
     from gabru_cli.auth_commands import auth_add_command
+
+    from gabru_cli.auth import is_source_suppressed
 
     assert is_source_suppressed("xai", "env:XAI_API_KEY") is True
     auth_add_command(SimpleNamespace(
@@ -1396,8 +1403,10 @@ def test_auth_remove_copilot_suppresses_all_variants(tmp_path, monkeypatch):
     )
 
     from types import SimpleNamespace
-    from gabru_cli.auth import is_source_suppressed
+
     from gabru_cli.auth_commands import auth_remove_command
+
+    from gabru_cli.auth import is_source_suppressed
 
     auth_remove_command(SimpleNamespace(provider="copilot", target="1"))
 
@@ -1428,8 +1437,10 @@ def test_auth_add_clears_all_suppressions_including_non_env(tmp_path, monkeypatc
     )
 
     from types import SimpleNamespace
-    from gabru_cli.auth import is_source_suppressed
+
     from gabru_cli.auth_commands import auth_add_command
+
+    from gabru_cli.auth import is_source_suppressed
 
     auth_add_command(SimpleNamespace(
         provider="copilot", auth_type="api_key",
@@ -1469,8 +1480,10 @@ def test_auth_remove_codex_manual_device_code_suppresses_canonical(tmp_path, mon
     )
 
     from types import SimpleNamespace
-    from gabru_cli.auth import is_source_suppressed
+
     from gabru_cli.auth_commands import auth_remove_command
+
+    from gabru_cli.auth import is_source_suppressed
 
     auth_remove_command(SimpleNamespace(provider="openai-codex", target="1"))
     assert is_source_suppressed("openai-codex", "device_code")

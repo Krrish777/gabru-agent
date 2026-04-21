@@ -2,9 +2,6 @@
 
 import os
 from pathlib import Path
-from unittest.mock import patch
-
-import pytest
 
 import gabru_constants
 from gabru_constants import get_default_gabru_root, is_container

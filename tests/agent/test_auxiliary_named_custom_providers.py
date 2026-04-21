@@ -1,7 +1,6 @@
 """Tests for named custom provider and 'main' alias resolution in auxiliary_client."""
 
-import os
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 import pytest
 

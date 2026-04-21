@@ -4,17 +4,15 @@ from pathlib import Path
 from unittest.mock import patch
 
 from tools.skills_sync import (
+    _compute_relative_dest,
+    _dir_hash,
+    _discover_bundled_skills,
     _get_bundled_dir,
     _read_manifest,
     _read_skill_name,
     _write_manifest,
-    _discover_bundled_skills,
-    _compute_relative_dest,
-    _dir_hash,
-    sync_skills,
     reset_bundled_skill,
-    MANIFEST_FILE,
-    SKILLS_DIR,
+    sync_skills,
 )
 
 
@@ -398,7 +396,7 @@ class TestSyncSkills:
         (user_skill / "SKILL.md").write_text("# User modified")
 
         with self._patches(bundled, skills_dir, manifest_file):
-            result = sync_skills(quiet=True)
+            sync_skills(quiet=True)
 
         assert (user_skill / "SKILL.md").read_text() == "# User modified"
 

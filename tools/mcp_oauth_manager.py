@@ -356,8 +356,8 @@ class MCPOAuthManager:
 
         # Local imports avoid circular deps at module import time.
         from tools.mcp_oauth import (
-            GabruTokenStorage,
             _OAUTH_AVAILABLE,
+            GabruTokenStorage,
             _build_client_metadata,
             _configure_callback_port,
             _is_interactive,

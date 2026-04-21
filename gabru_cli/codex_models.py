@@ -4,10 +4,9 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 from pathlib import Path
 from typing import List, Optional
-
-import os
 
 logger = logging.getLogger(__name__)
 
@@ -145,7 +144,7 @@ def _read_cache_models(codex_home: Path) -> List[str]:
 
 def get_codex_model_ids(access_token: Optional[str] = None) -> List[str]:
     """Return available Codex model IDs, trying API first, then local sources.
-    
+
     Resolution order: API (live, if token provided) > config.toml default >
     local cache > hardcoded defaults.
     """

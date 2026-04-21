@@ -17,13 +17,13 @@ Run with:  python -m pytest tests/tools/test_read_loop_detection.py -v
 
 import json
 import unittest
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
 from tools.file_tools import (
+    _read_tracker,
+    notify_other_tool_call,
     read_file_tool,
     search_tool,
-    notify_other_tool_call,
-    _read_tracker,
 )
 
 
@@ -176,7 +176,7 @@ class TestNotifyOtherToolCall(unittest.TestCase):
     @patch("tools.file_tools._get_file_ops", return_value=_make_fake_file_ops())
     def test_other_tool_prevents_block(self, _mock_ops):
         """Agent can keep reading if other tools are used in between."""
-        for i in range(10):
+        for _i in range(10):
             read_file_tool("/tmp/test.py", task_id="t1")
             notify_other_tool_call("t1")
         # After 10 reads interleaved with other tools, still no warning

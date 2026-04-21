@@ -7,12 +7,11 @@ import logging
 import os
 import threading
 from pathlib import Path
-from typing import Optional
 
 from agent.file_safety import get_read_block_error
+from agent.redact import redact_sensitive_text
 from tools.binary_extensions import has_binary_extension
 from tools.file_operations import ShellFileOperations
-from agent.redact import redact_sensitive_text
 
 logger = logging.getLogger(__name__)
 
@@ -225,13 +224,18 @@ def _get_file_ops(task_id: str = "default") -> ShellFileOperations:
     Thread-safe: uses the same per-task creation locks as terminal_tool to
     prevent duplicate sandbox creation from concurrent tool calls.
     """
+    import time
+
     from tools.terminal_tool import (
-        _active_environments, _env_lock, _create_environment,
-        _get_env_config, _last_activity, _start_cleanup_thread,
+        _active_environments,
+        _create_environment,
         _creation_locks,
         _creation_locks_lock,
+        _env_lock,
+        _get_env_config,
+        _last_activity,
+        _start_cleanup_thread,
     )
-    import time
 
     # Fast path: check cache -- but also verify the underlying environment
     # is still alive (it may have been killed by the cleanup thread).
@@ -645,7 +649,7 @@ def patch_tool(mode: str = "replace", path: str = None, old_string: str = None,
                 stale_warnings.append(_sw)
 
         file_ops = _get_file_ops(task_id)
-        
+
         if mode == "replace":
             if not path:
                 return tool_error("path required")
@@ -658,7 +662,7 @@ def patch_tool(mode: str = "replace", path: str = None, old_string: str = None,
             result = file_ops.patch_v4a(patch)
         else:
             return tool_error(f"Unknown mode: {mode}")
-        
+
         result_dict = result.to_dict()
         if stale_warnings:
             result_dict["_warning"] = stale_warnings[0] if len(stale_warnings) == 1 else " | ".join(stale_warnings)

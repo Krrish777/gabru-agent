@@ -3,8 +3,6 @@
 import os
 from pathlib import Path
 
-import pytest
-
 
 class TestResolvePath:
     """Verify _resolve_path respects TERMINAL_CWD for worktree isolation."""

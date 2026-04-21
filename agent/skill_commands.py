@@ -94,7 +94,7 @@ def _run_inline_shell(command: str, cwd: Path | None, timeout: int) -> str:
     except subprocess.TimeoutExpired:
         return f"[inline-shell timeout after {timeout}s: {command}]"
     except FileNotFoundError:
-        return f"[inline-shell error: bash not found]"
+        return "[inline-shell error: bash not found]"
     except Exception as exc:
         return f"[inline-shell error: {exc}]"
 
@@ -344,8 +344,8 @@ def scan_skill_commands() -> Dict[str, Dict[str, Any]]:
     global _skill_commands
     _skill_commands = {}
     try:
-        from tools.skills_tool import SKILLS_DIR, _parse_frontmatter, skill_matches_platform, _get_disabled_skill_names
         from agent.skill_utils import get_external_skills_dirs
+        from tools.skills_tool import SKILLS_DIR, _get_disabled_skill_names, _parse_frontmatter, skill_matches_platform
         disabled = _get_disabled_skill_names()
         seen_names: set = set()
 

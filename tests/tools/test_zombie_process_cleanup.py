@@ -9,10 +9,7 @@ import os
 import signal
 import subprocess
 import sys
-import time
 import threading
-
-import pytest
 
 
 def _spawn_sleep(seconds: float = 60) -> subprocess.Popen:
@@ -191,7 +188,7 @@ class TestGatewayCleanupWiring:
         """gateway stop() should call close() on all running agents."""
         import asyncio
         import threading
-        from unittest.mock import AsyncMock, MagicMock, patch
+        from unittest.mock import MagicMock, patch
 
         from gateway.run import GatewayRunner
 
@@ -269,6 +266,7 @@ class TestDelegationCleanup:
     def test_run_single_child_calls_close(self):
         """_run_single_child finally block should call close() on child."""
         from unittest.mock import MagicMock
+
         from tools.delegate_tool import _run_single_child
 
         parent = MagicMock()

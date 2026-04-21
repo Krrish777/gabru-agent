@@ -1,10 +1,6 @@
 """Tests for gabru_cli.skin_engine — the data-driven skin/theme system."""
 
-import json
-import os
 import pytest
-from pathlib import Path
-from unittest.mock import patch
 
 
 @pytest.fixture(autouse=True)
@@ -117,7 +113,7 @@ class TestBuiltinSkins:
 
 class TestSkinManagement:
     def test_set_active_skin(self):
-        from gabru_cli.skin_engine import set_active_skin, get_active_skin, get_active_skin_name
+        from gabru_cli.skin_engine import get_active_skin, get_active_skin_name, set_active_skin
         skin = set_active_skin("ares")
         assert skin.name == "ares"
         assert get_active_skin_name() == "ares"
@@ -143,24 +139,24 @@ class TestSkinManagement:
             assert s["source"] == "builtin"
 
     def test_init_skin_from_config(self):
-        from gabru_cli.skin_engine import init_skin_from_config, get_active_skin_name
+        from gabru_cli.skin_engine import get_active_skin_name, init_skin_from_config
         init_skin_from_config({"display": {"skin": "ares"}})
         assert get_active_skin_name() == "ares"
 
     def test_init_skin_from_empty_config(self):
-        from gabru_cli.skin_engine import init_skin_from_config, get_active_skin_name
+        from gabru_cli.skin_engine import get_active_skin_name, init_skin_from_config
         init_skin_from_config({})
         assert get_active_skin_name() == "default"
 
     def test_init_skin_from_null_display(self):
         """display: null should fall back to default, not crash."""
-        from gabru_cli.skin_engine import init_skin_from_config, get_active_skin_name
+        from gabru_cli.skin_engine import get_active_skin_name, init_skin_from_config
         init_skin_from_config({"display": None})
         assert get_active_skin_name() == "default"
 
     def test_init_skin_from_non_dict_display(self):
         """display: <non-dict> should fall back to default."""
-        from gabru_cli.skin_engine import init_skin_from_config, get_active_skin_name
+        from gabru_cli.skin_engine import get_active_skin_name, init_skin_from_config
         init_skin_from_config({"display": "invalid"})
         assert get_active_skin_name() == "default"
 
@@ -173,7 +169,7 @@ class TestSkinManagement:
 
 class TestUserSkins:
     def test_load_user_skin_from_yaml(self, tmp_path, monkeypatch):
-        from gabru_cli.skin_engine import load_skin, _skins_dir
+        from gabru_cli.skin_engine import load_skin
         # Create a user skin YAML
         skins_dir = tmp_path / "skins"
         skins_dir.mkdir()
@@ -224,12 +220,14 @@ class TestDisplayIntegration:
 
     def test_get_skin_tool_prefix_custom(self):
         from gabru_cli.skin_engine import set_active_skin
+
         from agent.display import get_skin_tool_prefix
         set_active_skin("ares")
         assert get_skin_tool_prefix() == "╎"
 
     def test_tool_message_uses_skin_prefix(self):
         from gabru_cli.skin_engine import set_active_skin
+
         from agent.display import get_cute_tool_message
         set_active_skin("ares")
         msg = get_cute_tool_message("terminal", {"command": "ls"}, 0.5)
@@ -249,25 +247,25 @@ class TestCliBrandingHelpers:
         assert get_active_prompt_symbol() == "❯ "
 
     def test_active_prompt_symbol_ares(self):
-        from gabru_cli.skin_engine import set_active_skin, get_active_prompt_symbol
+        from gabru_cli.skin_engine import get_active_prompt_symbol, set_active_skin
 
         set_active_skin("ares")
         assert get_active_prompt_symbol() == "⚔ ❯ "
 
     def test_active_help_header_ares(self):
-        from gabru_cli.skin_engine import set_active_skin, get_active_help_header
+        from gabru_cli.skin_engine import get_active_help_header, set_active_skin
 
         set_active_skin("ares")
         assert get_active_help_header() == "(⚔) Available Commands"
 
     def test_active_goodbye_ares(self):
-        from gabru_cli.skin_engine import set_active_skin, get_active_goodbye
+        from gabru_cli.skin_engine import get_active_goodbye, set_active_skin
 
         set_active_skin("ares")
         assert get_active_goodbye() == "Farewell, warrior! ⚔"
 
     def test_prompt_toolkit_style_overrides_cover_tui_classes(self):
-        from gabru_cli.skin_engine import set_active_skin, get_prompt_toolkit_style_overrides
+        from gabru_cli.skin_engine import get_prompt_toolkit_style_overrides, set_active_skin
 
         set_active_skin("ares")
         overrides = get_prompt_toolkit_style_overrides()
@@ -315,9 +313,9 @@ class TestCliBrandingHelpers:
 
     def test_prompt_toolkit_style_overrides_use_skin_colors(self):
         from gabru_cli.skin_engine import (
-            set_active_skin,
             get_active_skin,
             get_prompt_toolkit_style_overrides,
+            set_active_skin,
         )
 
         set_active_skin("ares")

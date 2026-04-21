@@ -378,7 +378,6 @@ class TestSessionContext:
         """Session context is per-thread — one thread's context doesn't leak."""
         gabru_logging.setup_logging(gabru_home=gabru_home)
 
-        results = {}
 
         def thread_a():
             gabru_logging.set_session_context("thread_a_session")

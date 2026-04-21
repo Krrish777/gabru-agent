@@ -20,9 +20,10 @@ import concurrent.futures
 import json
 import logging
 import re
-from typing import Dict, Any, List, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from agent.auxiliary_client import async_call_llm, extract_content_or_reasoning
+
 MAX_SESSION_CHARS = 100_000
 MAX_SUMMARY_TOKENS = 10000
 
@@ -478,7 +479,7 @@ def session_search(
             }, ensure_ascii=False)
 
         summaries = []
-        for (session_id, match_info, conversation_text, _), result in zip(tasks, results):
+        for (session_id, match_info, conversation_text, _), result in zip(tasks, results, strict=False):
             if isinstance(result, Exception):
                 logging.warning(
                     "Failed to summarize session %s: %s",

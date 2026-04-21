@@ -41,11 +41,11 @@ import time
 import uuid
 
 _IS_WINDOWS = platform.system() == "Windows"
-from tools.environments.local import _find_shell, _sanitize_subprocess_env
 from dataclasses import dataclass, field
 from typing import Any, Dict, List, Optional
 
 from gabru_cli.config import get_gabru_home
+from tools.environments.local import _find_shell, _sanitize_subprocess_env
 
 logger = logging.getLogger(__name__)
 
@@ -1025,7 +1025,7 @@ class ProcessRegistry:
                             "notify_on_complete": s.notify_on_complete,
                             "watch_patterns": s.watch_patterns,
                         })
-            
+
             # Atomic write to avoid corruption on crash
             from utils import atomic_json_write
             atomic_json_write(CHECKPOINT_PATH, entries)

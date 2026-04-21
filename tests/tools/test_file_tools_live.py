@@ -8,12 +8,6 @@ Every test with output validates against a known-good value AND
 asserts zero contamination from shell noise via _assert_clean().
 """
 
-import pytest
-
-
-
-
-import json
 import os
 import sys
 from pathlib import Path
@@ -24,7 +18,6 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 
 from tools.environments.local import LocalEnvironment
 from tools.file_operations import ShellFileOperations
-
 
 # ── Shared noise detection ───────────────────────────────────────────────
 # Known shell noise patterns that should never appear in command output.
@@ -388,7 +381,6 @@ class TestExpandPath:
         # The path should be returned as-is (no expansion).
         assert result == malicious
         # Verify the injected command did NOT execute
-        import os
         assert not os.path.exists("/tmp/_gabru_injection_test")
 
     def test_tilde_username_with_subpath(self, ops):

@@ -9,10 +9,6 @@ See: https://github.com/gabru-agent/issues/4426
 
 import os
 from pathlib import Path
-from unittest.mock import patch
-
-import pytest
-
 
 # ---------------------------------------------------------------------------
 # get_subprocess_home()

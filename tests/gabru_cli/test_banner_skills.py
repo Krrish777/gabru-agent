@@ -2,9 +2,6 @@
 
 from unittest.mock import patch
 
-import pytest
-
-
 _MOCK_SKILLS = [
     {"name": "skill-a", "description": "A skill", "category": "tools"},
     {"name": "skill-b", "description": "B skill", "category": "tools"},

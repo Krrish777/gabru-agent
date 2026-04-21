@@ -10,8 +10,6 @@ See issue #10817.
 """
 
 import os
-import pytest
-
 
 # The sentinel values that mean "resolve at runtime"
 _CWD_PLACEHOLDERS = (".", "auto", "cwd")

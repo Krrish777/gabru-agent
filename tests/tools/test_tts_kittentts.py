@@ -160,6 +160,7 @@ class TestGenerateKittenTts:
 class TestCheckKittenttsAvailable:
     def test_reports_available_when_package_present(self, monkeypatch):
         import importlib.util
+
         from tools.tts_tool import _check_kittentts_available
 
         fake_spec = MagicMock()
@@ -171,6 +172,7 @@ class TestCheckKittenttsAvailable:
 
     def test_reports_unavailable_when_package_missing(self, monkeypatch):
         import importlib.util
+
         from tools.tts_tool import _check_kittentts_available
 
         monkeypatch.setattr(importlib.util, "find_spec", lambda name: None)
@@ -184,10 +186,9 @@ class TestDispatcherBranch:
         monkeypatch.setitem(sys.modules, "kittentts", None)
         monkeypatch.setenv("GABRU_HOME", str(tmp_path))
 
-        from tools.tts_tool import text_to_speech_tool
-
         # Write a config telling it to use kittentts
         import yaml
+        from tools.tts_tool import text_to_speech_tool
         (tmp_path / "config.yaml").write_text(
             yaml.safe_dump({"tts": {"provider": "kittentts"}})
         )

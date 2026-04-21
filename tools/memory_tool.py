@@ -30,8 +30,9 @@ import re
 import tempfile
 from contextlib import contextmanager
 from pathlib import Path
+from typing import Any, Dict, List, Optional
+
 from gabru_constants import get_gabru_home
-from typing import Dict, Any, List, Optional
 
 # fcntl is Unix-only; on Windows use msvcrt for file locking
 msvcrt = None

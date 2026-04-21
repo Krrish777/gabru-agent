@@ -9,11 +9,7 @@ Verifies that:
 6. Non-transport errors don't trigger recovery
 """
 
-import time
-from types import SimpleNamespace
-from unittest.mock import MagicMock, patch, PropertyMock
-
-import pytest
+from unittest.mock import MagicMock, patch
 
 from run_agent import AIAgent
 

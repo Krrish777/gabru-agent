@@ -34,7 +34,6 @@ from agents.coder import CoderAgent
 from agents.hunter import HunterAgent
 from agents.tester import TesterAgent
 
-
 logger = logging.getLogger(__name__)
 
 

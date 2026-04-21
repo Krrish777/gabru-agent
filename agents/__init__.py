@@ -13,8 +13,8 @@ All three share the same tool registry; their system prompts and
 focus differ. They can be composed via :mod:`orchestrator`.
 """
 
-from agents.coder import CoderAgent, CODER_SYSTEM_PROMPT
-from agents.hunter import HunterAgent, HUNTER_SYSTEM_PROMPT
+from agents.coder import CODER_SYSTEM_PROMPT, CoderAgent
+from agents.hunter import HUNTER_SYSTEM_PROMPT, HunterAgent
 from agents.tester import TESTER_SYSTEM_PROMPT, TesterAgent
 
 __all__ = [

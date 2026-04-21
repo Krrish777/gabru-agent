@@ -11,7 +11,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Callable, List, Optional
 
-
 CODER_SYSTEM_PROMPT = """\
 You are the CODER agent in the Gabru-Agent autonomous-dev pipeline.
 

@@ -11,7 +11,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List, Optional
 
-
 HUNTER_SYSTEM_PROMPT = """\
 You are the VULN-HUNTER agent in the Gabru-Agent autonomous-dev pipeline.
 

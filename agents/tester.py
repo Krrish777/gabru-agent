@@ -10,7 +10,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import List, Optional
 
-
 TESTER_SYSTEM_PROMPT = """\
 You are the TESTER agent in the Gabru-Agent autonomous-dev pipeline.
 

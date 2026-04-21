@@ -5,31 +5,82 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "gabru-agent"
 version = "0.1.0"
-description = "Gabru-Agent - Generative Agent for Build, Review & Unit-test"
+description = "Gabru-Agent - Generative Agent for Build, Review & Unit-test. A specialized multi-agent system for autonomous software engineering."
 readme = "README.md"
 requires-python = ">=3.11,<3.12"
+authors = [{ name = "Gabru-Agent contributors" }]
 license = { text = "MIT" }
 dependencies = [
-  # Placeholder — finalized in Phase C1
+  # LLM client (OpenAI-compatible -> OpenRouter)
+  "openai>=2.21.0,<3",
+
+  # HTTP + retries
+  "httpx[socks]>=0.28.1,<1",
+  "tenacity>=9.1.4,<10",
+
+  # Data / config
+  "pydantic>=2.12.5,<3",
+  "pyyaml>=6.0.2,<7",
+  "python-dotenv>=1.2.1,<2",
+  "jinja2>=3.1.5,<4",
+
+  # CLI / display
+  "rich>=14.3.3,<15",
+  "prompt_toolkit>=3.0.52,<4",
+  "fire>=0.7.1,<1",
+
+  # Skills Hub (GitHub App JWT auth when fetching bundled packs)
+  "PyJWT[crypto]>=2.12.0,<3",
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=9.0.2,<10", "pytest-asyncio>=1.3.0,<2", "pytest-xdist>=3.0,<4", "ruff>=0.6,<1"]
+dev = [
+  "pytest>=9.0.2,<10",
+  "pytest-asyncio>=1.3.0,<2",
+  "pytest-xdist>=3.0,<4",
+  "ruff>=0.6,<1",
+]
+mcp = ["mcp>=1.2.0,<2"]
 
 [project.scripts]
 gabru = "gabru_cli.main:main"
+gabru-mcp = "mcp_serve:main"
+
+[tool.setuptools]
+py-modules = [
+  "run_agent",
+  "mcp_serve",
+  "model_tools",
+  "toolsets",
+  "utils",
+  "gabru_state",
+  "gabru_constants",
+  "gabru_logging",
+  "gabru_time",
+]
+
+[tool.setuptools.packages.find]
+include = ["agent", "agent.*", "tools", "tools.*", "gabru_cli"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = [
     "integration: marks tests requiring external services (API keys, network)",
 ]
-addopts = "-m 'not integration' -n auto"
+addopts = "-m 'not integration'"
+asyncio_mode = "auto"
 
 [tool.ruff]
 target-version = "py311"
 line-length = 120
+exclude = ["tests/fakes", "skills", "optional-skills"]
 
 [tool.ruff.lint]
-select = ["E", "F", "W", "I"]
-ignore = ["E501"]
+select = ["E", "F", "W", "I", "B"]
+ignore = [
+  "E501",  # line length handled by formatter
+  "B008",  # function-call default argument
+]
+
+[tool.ruff.format]
+quote-style = "double"

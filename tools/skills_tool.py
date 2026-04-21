@@ -363,7 +363,10 @@ def _capture_required_environment_variables(
 def _is_gateway_surface() -> bool:
     if os.getenv("GABRU_GATEWAY_SESSION"):
         return True
-    from gateway.session_context import get_session_env
+    try:
+        from gateway.session_context import get_session_env
+    except ImportError:
+        return bool(os.environ.get("GABRU_SESSION_PLATFORM"))
     return bool(get_session_env("GABRU_SESSION_PLATFORM"))
 
 

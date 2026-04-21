@@ -463,8 +463,9 @@ class BaseEnvironment(ABC):
         # ``Popen``) so binary or mis-encoded output is preserved with
         # U+FFFD substitution rather than clobbering the whole buffer.
         decoder = codecs.getincrementaldecoder("utf-8")(errors="replace")
+        _is_windows = os.name == "nt"
 
-        def _drain():
+        def _drain_select():
             fd = proc.stdout.fileno()
             idle_after_exit = 0
             try:
@@ -490,9 +491,6 @@ class BaseEnvironment(ABC):
                         if idle_after_exit >= 3:
                             break
             finally:
-                # Flush any bytes buffered mid-sequence.  With ``errors="replace"``
-                # this emits U+FFFD for any final incomplete sequence rather than
-                # raising.
                 try:
                     tail = decoder.decode(b"", final=True)
                     if tail:
@@ -500,7 +498,28 @@ class BaseEnvironment(ABC):
                 except Exception:
                     pass
 
-        drain_thread = threading.Thread(target=_drain, daemon=True)
+        def _drain_blocking_read():
+            # Windows fallback: select.select doesn't work on pipe FDs, and
+            # non-blocking I/O on Win32 pipes is awkward. Use blocking reads
+            # via the text-mode stdout (Popen created it with encoding="utf-8"
+            # + errors="replace"). We stop when the read returns empty — i.e.
+            # when the writer has closed its end. For grandchildren that hold
+            # the pipe open past bash exit, the kernel will eventually close
+            # when this thread's parent exits; the daemon=True means we don't
+            # block process shutdown.
+            try:
+                while True:
+                    chunk = proc.stdout.read(4096)
+                    if not chunk:
+                        break
+                    output_chunks.append(chunk)
+            except Exception:
+                pass
+
+        drain_thread = threading.Thread(
+            target=_drain_blocking_read if _is_windows else _drain_select,
+            daemon=True,
+        )
         drain_thread.start()
         deadline = time.monotonic() + timeout
         _now = time.monotonic()

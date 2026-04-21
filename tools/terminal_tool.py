@@ -1712,7 +1712,12 @@ def terminal_tool(
                 # watch-pattern and completion notifications can be
                 # routed back to the correct chat/thread.
                 if background and (notify_on_complete or watch_patterns):
-                    from gateway.session_context import get_session_env as _gse
+                    try:
+                        from gateway.session_context import get_session_env as _gse
+                    except ImportError:
+                        # gateway module was removed from Gabru; read env directly
+                        def _gse(key: str, default: str = "") -> str:
+                            return os.environ.get(key, default)
                     _gw_platform = _gse("GABRU_SESSION_PLATFORM", "")
                     if _gw_platform:
                         _gw_chat_id = _gse("GABRU_SESSION_CHAT_ID", "")

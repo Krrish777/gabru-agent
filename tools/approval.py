@@ -51,8 +51,12 @@ def get_current_session_key(default: str = "default") -> str:
     session_key = _approval_session_key.get()
     if session_key:
         return session_key
-    from gateway.session_context import get_session_env
-    return get_session_env("GABRU_SESSION_KEY", default)
+    # gateway module was removed from Gabru; fall back to the env var directly.
+    try:
+        from gateway.session_context import get_session_env
+        return get_session_env("GABRU_SESSION_KEY", default)
+    except ImportError:
+        return os.environ.get("GABRU_SESSION_KEY", default)
 
 # Sensitive write targets that should trigger approval even when referenced
 # via shell expansions like $HOME or $GABRU_HOME.

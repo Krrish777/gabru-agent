@@ -49,6 +49,7 @@ mcp = ["mcp>=1.2.0,<2"]
 [project.scripts]
 gabru = "gabru_cli.main:main"
 gabru-mcp = "mcp_serve:main"
+gabru-pipeline = "orchestrator:main"
 
 [tool.setuptools]
 py-modules = [
@@ -57,6 +58,7 @@ py-modules = [
   "model_tools",
   "toolsets",
   "utils",
+  "orchestrator",
   "gabru_state",
   "gabru_constants",
   "gabru_logging",
@@ -64,7 +66,7 @@ py-modules = [
 ]
 
 [tool.setuptools.packages.find]
-include = ["agent", "agent.*", "tools", "tools.*", "gabru_cli"]
+include = ["agent", "agent.*", "agents", "tools", "tools.*", "gabru_cli"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

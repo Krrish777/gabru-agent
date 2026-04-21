@@ -379,11 +379,16 @@ class BaseEnvironment(ABC):
         if self._snapshot_ready:
             parts.append(f"source {self._snapshot_path} 2>/dev/null || true")
 
-        # cd to working directory — let bash expand ~ natively
+        # cd to working directory — let bash expand ~ natively. If the
+        # stored cwd has been deleted (common when an earlier tool call
+        # ran `cd <tmpdir> && ...` and the caller then removed <tmpdir>),
+        # fall back to $HOME and then to /. Without this, every
+        # subsequent terminal/read_file/patch call exits 126 before the
+        # real command runs, looking like a file-not-found error.
         quoted_cwd = (
             shlex.quote(cwd) if cwd != "~" and not cwd.startswith("~/") else cwd
         )
-        parts.append(f"cd {quoted_cwd} || exit 126")
+        parts.append(f"cd {quoted_cwd} 2>/dev/null || cd \"$HOME\" 2>/dev/null || cd /")
 
         # Run the actual command
         parts.append(f"eval '{escaped}'")

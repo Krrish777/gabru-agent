@@ -85,7 +85,7 @@ def cleanup_stale_async_clients(*args: Any, **kwargs: Any) -> None:
     return None
 
 
-def _fixed_temperature_for_model(model: Optional[str]) -> Any:
+def _fixed_temperature_for_model(*args: Any, **kwargs: Any) -> Any:
     return OMIT_TEMPERATURE
 
 

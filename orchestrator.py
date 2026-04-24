@@ -93,7 +93,7 @@ def _run_station(name: str, fn, context: str) -> StationResult:
     t0 = time.monotonic()
     try:
         reply = fn(context)
-        return StationResult(name=name, reply=reply, elapsed_seconds=time.monotonic() - t0)
+        return StationResult(name=name, reply=reply or "", elapsed_seconds=time.monotonic() - t0)
     except Exception as exc:  # noqa: BLE001 — log everything that breaks a station
         logger.exception("[%s] crashed", name)
         return StationResult(

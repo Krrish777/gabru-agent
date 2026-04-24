@@ -611,7 +611,12 @@ def build_skills_system_prompt(
     # ── Layer 1: in-process LRU cache ─────────────────────────────────
     # Include the resolved platform so per-platform disabled-skill lists
     # produce distinct cache entries (gateway serves multiple platforms).
-    from gateway.session_context import get_session_env
+    try:
+        from gateway.session_context import get_session_env
+    except ImportError:
+        # gateway module was removed from Gabru; fall back to the env var directly.
+        def get_session_env(key: str, default: str = "") -> str:
+            return os.environ.get(key, default)
     _platform_hint = (
         os.environ.get("GABRU_PLATFORM")
         or get_session_env("GABRU_SESSION_PLATFORM")

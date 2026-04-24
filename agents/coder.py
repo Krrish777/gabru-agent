@@ -69,6 +69,7 @@ class CoderAgent:
     model: Optional[str] = None
     max_iterations: int = 40
     quiet_mode: bool = True
+    max_tokens: int = 2048
 
     def build(self, extra_prompt: str = "", **kwargs):
         """Instantiate the underlying AIAgent with the Coder prompt."""
@@ -88,6 +89,7 @@ class CoderAgent:
             quiet_mode=self.quiet_mode,
             skip_memory=True,
             skip_context_files=True,
+            max_tokens=self.max_tokens,
             **kwargs,
         )
 

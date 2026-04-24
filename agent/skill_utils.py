@@ -145,7 +145,12 @@ def get_disabled_skill_names(platform: str | None = None) -> Set[str]:
     if not isinstance(skills_cfg, dict):
         return set()
 
-    from gateway.session_context import get_session_env
+    try:
+        from gateway.session_context import get_session_env
+    except ImportError:
+        # gateway module was removed from Gabru; fall back to the env var directly.
+        def get_session_env(key: str, default: str = "") -> str:
+            return os.environ.get(key, default)
     resolved_platform = (
         platform
         or os.getenv("GABRU_PLATFORM")

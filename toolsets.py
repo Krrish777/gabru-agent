@@ -179,6 +179,12 @@ TOOLSETS = {
         "includes": []
     },
 
+    "pipeline": {
+        "description": "Pipeline manifest — returns Coder/Tester/Hunter stage instructions for Claude Code to execute",
+        "tools": ["get_pipeline_stages"],
+        "includes": []
+    },
+
     "code_execution": {
         "description": "Run Python scripts that call tools programmatically (reduces LLM round trips)",
         "tools": ["execute_code"],

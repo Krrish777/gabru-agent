@@ -64,6 +64,7 @@ class HunterAgent:
     model: Optional[str] = None
     max_iterations: int = 40
     quiet_mode: bool = True
+    max_tokens: int = 2048
 
     def build(self, extra_prompt: str = "", **kwargs):
         from run_agent import AIAgent
@@ -81,6 +82,7 @@ class HunterAgent:
             quiet_mode=self.quiet_mode,
             skip_memory=True,
             skip_context_files=True,
+            max_tokens=self.max_tokens,
             **kwargs,
         )
 

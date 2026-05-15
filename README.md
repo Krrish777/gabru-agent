@@ -100,7 +100,3 @@ gabru-agent/
     └── run_tests.sh     # CI-parity pytest wrapper
 ```
 
-## License
-
-MIT. Portions derived from [Hermes Agent](https://github.com/NousResearch/hermes-agent)
-(MIT, Copyright © Nous Research). See `LICENSE` and `NOTICE` for details.
